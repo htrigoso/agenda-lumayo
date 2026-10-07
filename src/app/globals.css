@@ -2,3 +2,305 @@ html,
 body {
   height: 100%;
 }
+
+/* FullCalendar, styled after Google Calendar with the Lumayo brand colors. */
+.fc {
+  --fc-border-color: #dadce0;
+  --fc-page-bg-color: #fff;
+  --fc-neutral-bg-color: #f8f9fa;
+  --fc-today-bg-color: transparent;
+  --fc-now-indicator-color: #ea4335;
+  --fc-event-border-color: transparent;
+  font-family: inherit;
+  color: #3c4043;
+}
+
+.fc .fc-scrollgrid {
+  border: 0;
+}
+
+.fc .fc-scrollgrid td:last-of-type,
+.fc .fc-scrollgrid th:last-of-type {
+  border-right: 0;
+}
+
+/* Toolbar: [Hoy] [<] [>] Title ............ [Mes|Semana|Día] */
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 0.75rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: #3c4043;
+  text-transform: capitalize;
+}
+
+.fc .fc-toolbar-chunk {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fc .fc-button {
+  box-shadow: none !important;
+  text-transform: capitalize;
+  font-weight: 500;
+  margin: 0 !important;
+}
+
+.fc .fc-button-primary {
+  background: #fff;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+}
+
+.fc .fc-button-primary:hover {
+  background: #f1f3f4;
+  color: #3c4043;
+  border-color: #dadce0;
+}
+
+.fc .fc-button-primary:disabled {
+  background: #fff;
+  color: #3c4043;
+  opacity: 0.5;
+}
+
+/* Prev / next: round ghost icon buttons */
+.fc .fc-prev-button,
+.fc .fc-next-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #5f6368;
+}
+
+.fc .fc-prev-button:hover,
+.fc .fc-next-button:hover {
+  background: #f1f3f4;
+  color: #202124;
+}
+
+/* View switcher: segmented control */
+.fc .fc-dayGridMonth-button,
+.fc .fc-timeGridWeek-button,
+.fc .fc-timeGridDay-button {
+  border-radius: 0;
+  margin-left: -1px !important;
+}
+
+.fc .fc-dayGridMonth-button {
+  border-radius: 6px 0 0 6px;
+  margin-left: 0 !important;
+}
+
+.fc .fc-timeGridDay-button {
+  border-radius: 0 6px 6px 0;
+}
+
+.fc .fc-button-primary.fc-button-active,
+.fc .fc-button-primary:not(:disabled).fc-button-active:hover {
+  background: rgba(11, 60, 110, 0.1);
+  border-color: #dadce0;
+  color: #0b3c6e;
+  font-weight: 600;
+}
+
+/* Column headers */
+.fc .fc-col-header-cell {
+  border-bottom: 1px solid var(--fc-border-color);
+  background: #fff;
+}
+
+.fc .fc-col-header-cell-cushion {
+  display: block;
+  padding: 8px 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #70757a;
+}
+
+.gc-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.gc-dow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #70757a;
+}
+
+.gc-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #3c4043;
+}
+
+.gc-head.is-today .gc-dow {
+  color: #0b3c6e;
+}
+
+.gc-head.is-today .gc-num {
+  background: #0b3c6e;
+  color: #fff;
+}
+
+/* Month view */
+.fc .fc-daygrid-day-top {
+  justify-content: center;
+}
+
+.fc .fc-daygrid-day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin: 4px 0 2px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #3c4043;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+  background: #0b3c6e;
+  color: #fff;
+}
+
+.fc .fc-day-other .fc-daygrid-day-top {
+  opacity: 0.5;
+}
+
+.fc .fc-more-link {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #3c4043;
+}
+
+/* Time grid: only hourly lines, quiet labels */
+.fc .fc-timegrid-slot {
+  height: 1.9rem;
+  border-top-color: var(--fc-border-color);
+}
+
+.fc .fc-timegrid-slot-minor {
+  border-top-color: transparent;
+}
+
+.fc .fc-timegrid-slot-label {
+  border-color: transparent;
+  vertical-align: top;
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+  position: relative;
+  top: -0.6em;
+  padding-right: 8px;
+  font-size: 0.7rem;
+  color: #70757a;
+}
+
+.fc .fc-timegrid-axis {
+  border-right-color: transparent;
+}
+
+/* Current time: red line with a dot, like Google */
+.fc .fc-timegrid-now-indicator-line {
+  border-width: 2px 0 0;
+}
+
+.fc .fc-timegrid-now-indicator-arrow {
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border: 0;
+  border-radius: 50%;
+  background: #ea4335;
+}
+
+/* Events: solid rounded blocks with white text */
+.fc .fc-event {
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  padding: 1px 6px;
+  box-shadow: 0 0 0 1px #fff;
+  transition: filter 0.12s ease, box-shadow 0.12s ease;
+}
+
+.fc .fc-event:hover {
+  filter: brightness(0.94);
+  box-shadow: 0 0 0 1px #fff, 0 2px 6px rgba(60, 64, 67, 0.3);
+}
+
+.fc .fc-daygrid-block-event {
+  margin: 1px 4px;
+}
+
+.fc .fc-daygrid-block-event .fc-event-main,
+.fc .fc-timegrid-event .fc-event-main {
+  padding: 0;
+  color: #fff;
+}
+
+.appt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 6px;
+  align-items: baseline;
+  overflow: hidden;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: #fff;
+}
+
+.appt-time {
+  font-weight: 600;
+}
+
+.appt-title {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-cancelled {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+@media (max-width: 900px) {
+  .fc .fc-toolbar.fc-header-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .fc .fc-toolbar-chunk {
+    justify-content: center;
+  }
+}

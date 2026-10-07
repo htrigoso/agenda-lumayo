@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { Client } from "@/components/client-form";
+import { fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
 import { createClient } from "@/lib/supabase/server";
 
 function parse(formData: FormData) {
@@ -33,4 +35,15 @@ export async function deleteClient(id: string) {
   const { error } = await supabase.from("clients").delete().eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath("/");
+}
+
+export async function loadMoreClients(page: number, q: string, onlyPriority: boolean) {
+  const supabase = await createClient();
+  const { data, error } = await fetchClientsPage(supabase, {
+    page,
+    term: sanitizeTerm(q),
+    onlyPriority,
+  });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Client[];
 }

@@ -12,7 +12,7 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { deleteClient } from "@/app/clients/actions";
 
-export function DeleteClientButton({ id, name }: { id: string; name: string }) {
+export function DeleteClientButton({ id, name, onDeleted }: { id: string; name: string; onDeleted?: () => void }) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -39,6 +39,7 @@ export function DeleteClientButton({ id, name }: { id: string; name: string }) {
             onClick={() =>
               startTransition(async () => {
                 await deleteClient(id);
+                onDeleted?.();
                 setOpen(false);
               })
             }
