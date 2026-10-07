@@ -30,9 +30,9 @@ import {
   deletePlan,
   getBudget,
   setItemStatus,
-} from "@/app/clients/budget-actions";
-import type { OpenItem } from "@/app/clients/clinical-actions";
-import { listServices } from "@/app/servicios/actions";
+} from "@/app/(app)/clients/budget-actions";
+import type { OpenItem } from "@/app/(app)/clients/clinical-actions";
+import { listServices } from "@/app/(app)/servicios/actions";
 import {
   ITEM_STATUS,
   itemTotal,
@@ -44,6 +44,7 @@ import {
   type TreatmentPlan,
 } from "@/lib/budget";
 import { formatMoney } from "@/lib/money";
+import { EASE, MotionPaper, MotionStack } from "@/components/motion";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { AttendanceDialog } from "@/components/history/attendance-dialog";
 import { ItemDialog, PaymentDialog, PlanDialog } from "@/components/budget/budget-dialogs";
@@ -137,11 +138,17 @@ export function BudgetPanel({ clientId }: { clientId: string }) {
         </Paper>
       )}
 
-      {plans?.map((plan) => {
+      {plans?.map((plan, planIndex) => {
         const { total, paid, balance } = planTotals(plan);
         const progress = total > 0 ? Math.min(100, (paid / total) * 100) : 0;
         return (
-          <Paper key={plan.id} sx={{ p: { xs: 2, sm: 3 } }}>
+          <MotionPaper
+            key={plan.id}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: EASE, delay: planIndex * 0.08 }}
+            sx={{ p: { xs: 2, sm: 3 } }}
+          >
             <Stack spacing={2}>
               <Stack direction="row" sx={{ alignItems: "flex-start", gap: 1 }}>
                 <Box sx={{ flexGrow: 1, minWidth: 0 }}>
@@ -180,7 +187,16 @@ export function BudgetPanel({ clientId }: { clientId: string }) {
                 </Typography>
               )}
               {plan.items.map((item) => (
-                <Stack key={item.id} spacing={1} sx={{ p: 1.5, border: 1, borderColor: "divider", borderRadius: 2 }}>
+                <MotionStack
+                  key={item.id}
+                  layout="position"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ backgroundColor: "rgba(11,60,110,0.035)" }}
+                  transition={{ duration: 0.25, ease: EASE }}
+                  spacing={1}
+                  sx={{ p: 1.5, border: 1, borderColor: "divider", borderRadius: 2 }}
+                >
                   <Stack direction="row" sx={{ alignItems: "flex-start", gap: 1 }}>
                     <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                       <Typography sx={{ fontWeight: 600, overflowWrap: "anywhere" }}>{item.description}</Typography>
@@ -230,7 +246,7 @@ export function BudgetPanel({ clientId }: { clientId: string }) {
                       </IconButton>
                     </Box>
                   </Stack>
-                </Stack>
+                </MotionStack>
               ))}
               <Button startIcon={<AddIcon />} onClick={() => setDialog({ type: "item", plan, item: null })} sx={{ alignSelf: "flex-start" }}>
                 Agregar tratamiento
@@ -276,7 +292,7 @@ export function BudgetPanel({ clientId }: { clientId: string }) {
                 {balance <= 0 && total > 0 && <Chip color="success" label="Pagado completo" />}
               </Stack>
             </Stack>
-          </Paper>
+          </MotionPaper>
         );
       })}
 

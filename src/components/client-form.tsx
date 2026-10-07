@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
@@ -9,7 +11,7 @@ import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { saveClient } from "@/app/clients/actions";
+import { saveClient } from "@/app/(app)/clients/actions";
 
 export type Client = {
   id: string;
@@ -44,6 +46,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export function ClientForm({ client }: { client?: Client }) {
+  const [mobile, setMobile] = useState(client?.mobile ?? "");
+  const [whatsapp, setWhatsapp] = useState(client?.whatsapp ?? "");
+  // New patients start with the shortcut on; existing ones only if both numbers already match.
+  const [sameNumber, setSameNumber] = useState(client ? !!client.mobile && client.mobile === client.whatsapp : true);
+
   return (
     <Paper component="form" action={saveClient.bind(null, client?.id ?? null)} sx={{ p: { xs: 2, sm: 3 }, maxWidth: 820 }}>
       <Grid container spacing={2}>
@@ -84,10 +91,42 @@ export function ClientForm({ client }: { client?: Client }) {
 
         <Section title="Contacto">
           <Grid size={{ xs: 12, sm: 6 }}>
-            <TextField name="mobile" label="Celular" type="tel" fullWidth defaultValue={client?.mobile ?? ""} />
+            <TextField
+              name="mobile"
+              label="Celular"
+              type="tel"
+              fullWidth
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+            />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <TextField name="whatsapp" label="WhatsApp" type="tel" fullWidth defaultValue={client?.whatsapp ?? ""} />
+            {/* A disabled field is not submitted, so the mirrored number travels in a hidden input. */}
+            {sameNumber && <input type="hidden" name="whatsapp" value={mobile} />}
+            <TextField
+              name={sameNumber ? undefined : "whatsapp"}
+              label="WhatsApp"
+              type="tel"
+              fullWidth
+              disabled={sameNumber}
+              value={sameNumber ? mobile : whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+            />
+          </Grid>
+          <Grid size={12} sx={{ mt: -1 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={sameNumber}
+                  onChange={(e) => {
+                    setSameNumber(e.target.checked);
+                    // Unchecking keeps the number as a starting point instead of clearing the field.
+                    if (!e.target.checked && !whatsapp) setWhatsapp(mobile);
+                  }}
+                />
+              }
+              label="Este número también es su WhatsApp"
+            />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <TextField name="email" label="Correo" type="email" fullWidth defaultValue={client?.email ?? ""} />

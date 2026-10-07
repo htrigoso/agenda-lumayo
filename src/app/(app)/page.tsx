@@ -1,10 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -13,38 +10,11 @@ import EmailIcon from "@mui/icons-material/EmailOutlined";
 import GroupIcon from "@mui/icons-material/GroupOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import type { Client } from "@/components/client-form";
-import { AppShell } from "@/components/app-shell";
+import { StatCard } from "@/components/stat-card";
 import { ClientsView } from "@/components/clients-view";
 import { SearchBox } from "@/components/search-box";
 import { PAGE_SIZE, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
 import { createClient } from "@/lib/supabase/server";
-
-function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
-  return (
-    <Paper
-      sx={{
-        p: { xs: 1.5, sm: 2.5 },
-        display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
-        alignItems: { xs: "flex-start", sm: "center" },
-        gap: { xs: 1, sm: 2 },
-        height: "100%",
-      }}
-    >
-      <Avatar sx={{ bgcolor: "primary.main", color: "primary.contrastText", width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 } }}>
-        {icon}
-      </Avatar>
-      <Box>
-        <Typography variant="h5" sx={{ fontWeight: 700, lineHeight: 1.1 }}>
-          {value}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: 12, sm: 14 } }}>
-          {label}
-        </Typography>
-      </Box>
-    </Paper>
-  );
-}
 
 function pageHref(page: number, term: string, onlyPriority: boolean) {
   const params = new URLSearchParams();
@@ -89,13 +59,13 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
     <Stack spacing={3}>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         <Grid size={4}>
-          <StatCard label="Total de pacientes" value={total} icon={<GroupIcon />} />
+          <StatCard index={0} label="Total de pacientes" value={total} icon={<GroupIcon />} />
         </Grid>
         <Grid size={4}>
-          <StatCard label="Con WhatsApp" value={withWhatsapp} icon={<WhatsAppIcon />} />
+          <StatCard index={1} label="Con WhatsApp" value={withWhatsapp} icon={<WhatsAppIcon />} />
         </Grid>
         <Grid size={4}>
-          <StatCard label="Con correo" value={withEmail} icon={<EmailIcon />} />
+          <StatCard index={2} label="Con correo" value={withEmail} icon={<EmailIcon />} />
         </Grid>
       </Grid>
 
@@ -122,13 +92,13 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
 
 export default function HomePage({ searchParams }: PageProps<"/">) {
   return (
-    <AppShell>
+    <>
       <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
         Pacientes
       </Typography>
       <Suspense fallback={<Skeleton variant="rounded" height={320} />}>
         <Dashboard searchParams={searchParams} />
       </Suspense>
-    </AppShell>
+    </>
   );
 }

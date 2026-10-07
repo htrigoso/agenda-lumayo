@@ -22,9 +22,10 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import { deleteService, listServices, saveService } from "@/app/servicios/actions";
+import { deleteService, listServices, saveService } from "@/app/(app)/servicios/actions";
 import type { Service } from "@/lib/budget";
 import { formatMoney } from "@/lib/money";
+import { AnimatePresence, LiftCard, Stagger } from "@/components/motion";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 
 export function ServicesManager() {
@@ -93,9 +94,10 @@ export function ServicesManager() {
         </Paper>
       )}
 
-      <Stack spacing={1.5}>
+      <Stagger key={filter} spacing={1.5}>
+        <AnimatePresence initial={false}>
         {visible.map((s) => (
-          <Paper key={s.id} sx={{ p: 2, opacity: s.active ? 1 : 0.6 }}>
+          <LiftCard key={s.id} sx={{ p: 2, opacity: s.active ? 1 : 0.6 }}>
             <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
               <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                 <Typography sx={{ fontWeight: 600, overflowWrap: "anywhere" }}>{s.name}</Typography>
@@ -112,9 +114,10 @@ export function ServicesManager() {
                 <DeleteIcon />
               </IconButton>
             </Stack>
-          </Paper>
+          </LiftCard>
         ))}
-      </Stack>
+        </AnimatePresence>
+      </Stagger>
 
       <ServiceDialog
         key={editing === null ? "closed" : editing === "new" ? "new" : editing.id}

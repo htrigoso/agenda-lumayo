@@ -10,7 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { deleteClient } from "@/app/clients/actions";
+import { deleteClient } from "@/app/(app)/clients/actions";
 
 export function DeleteClientButton({ id, name, onDeleted }: { id: string; name: string; onDeleted?: () => void }) {
   const [open, setOpen] = useState(false);

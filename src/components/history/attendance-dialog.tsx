@@ -14,7 +14,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { saveAttendance, saveAttendanceBatch, type Attendance, type OpenItem } from "@/app/clients/clinical-actions";
+import { saveAttendance, saveAttendanceBatch, type Attendance, type OpenItem } from "@/app/(app)/clients/clinical-actions";
 import { toDateTimeLocal } from "@/lib/appointments";
 
 const normalizeTeeth = (value: string | null) => (value ?? "").replace(/\s+/g, "").toLowerCase();

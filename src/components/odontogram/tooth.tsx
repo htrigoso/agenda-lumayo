@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { markAcronym, markColor, markName, findingByCode } from "@/lib/odontogram-catalog";
 import { SURFACE_LABEL, quadrantOf, surfaceAt, type Mark, type ToothData, type Zone } from "@/lib/odontogram";
 
@@ -197,7 +198,11 @@ export function Tooth({
     .filter((l): l is { text: string; color: string } => !!l && l.text !== "");
 
   return (
-    <g>
+    <motion.g
+      whileHover={interactive ? { scale: 1.07 } : undefined}
+      transition={{ type: "spring", stiffness: 420, damping: 22 }}
+      style={{ transformBox: "fill-box", transformOrigin: "center" }}
+    >
       <text
         x={CX}
         y={geo.numberY}
@@ -209,7 +214,18 @@ export function Tooth({
         {number}
       </text>
 
-      {highlighted && <circle cx={CX} cy={geo.cy} r={R_OUT + 6} fill="none" stroke="#19b4d8" strokeWidth="2.2" opacity="0.8" />}
+      {highlighted && (
+        <motion.circle
+          cx={CX}
+          cy={geo.cy}
+          r={R_OUT + 6}
+          fill="none"
+          stroke="#19b4d8"
+          strokeWidth="2.2"
+          animate={{ opacity: [0.9, 0.3, 0.9] }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+        />
+      )}
 
       <g opacity={faded ? 0.35 : 1}>
         <Roots tooth={number} geo={geo} upper={upper} />
@@ -255,7 +271,7 @@ export function Tooth({
           ))}
         </text>
       )}
-    </g>
+    </motion.g>
   );
 }
 

@@ -7,8 +7,8 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import esLocale from "@fullcalendar/core/locales/es";
 import type { EventInput } from "@fullcalendar/core";
-import Paper from "@mui/material/Paper";
-import { listAppointments, moveAppointment } from "@/app/agenda/actions";
+import { EASE, MotionPaper } from "@/components/motion";
+import { listAppointments, moveAppointment } from "@/app/(app)/agenda/actions";
 import { STATUS, clientName, endsAt, type Appointment } from "@/lib/appointments";
 
 type Props = {
@@ -54,7 +54,13 @@ export default function CalendarDesktop({ refreshKey, onCreate, onSelect }: Prop
   }, [refreshKey]);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2, borderRadius: 3, borderColor: "#dadce0" }}>
+    <MotionPaper
+      variant="outlined"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: EASE }}
+      sx={{ p: 2, borderRadius: 3, borderColor: "#dadce0" }}
+    >
       <FullCalendar
         ref={calendar}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -117,6 +123,6 @@ export default function CalendarDesktop({ refreshKey, onCreate, onSelect }: Prop
           moveAppointment(info.event.id, start.toISOString(), minutes).catch(() => info.revert());
         }}
       />
-    </Paper>
+    </MotionPaper>
   );
 }

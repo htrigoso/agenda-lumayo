@@ -21,8 +21,9 @@ import {
   getOpenItems,
   type Attendance,
   type OpenItem,
-} from "@/app/clients/clinical-actions";
+} from "@/app/(app)/clients/clinical-actions";
 import { formatRecordNumber } from "@/lib/record";
+import { MotionStack, Stagger, itemVariants } from "@/components/motion";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { AttendanceDialog } from "@/components/history/attendance-dialog";
 
@@ -72,9 +73,9 @@ export function HistoryPanel({
   }, [items]);
 
   const timeline = (list: Attendance[]) => (
-    <Stack spacing={0}>
+    <Stagger key={view} spacing={0}>
       {list.map((a, index) => (
-        <Stack key={a.id} direction="row" spacing={2}>
+        <MotionStack key={a.id} variants={itemVariants} direction="row" spacing={2}>
           <Stack sx={{ alignItems: "center", width: 14, flexShrink: 0 }}>
             <Box sx={{ width: 12, height: 12, borderRadius: "50%", bgcolor: "primary.main", mt: 2.2, flexShrink: 0 }} />
             {index < list.length - 1 && <Box sx={{ width: 2, flexGrow: 1, bgcolor: "divider" }} />}
@@ -110,9 +111,9 @@ export function HistoryPanel({
               </IconButton>
             </Stack>
           </Paper>
-        </Stack>
+        </MotionStack>
       ))}
-    </Stack>
+    </Stagger>
   );
 
   return (

@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Skeleton from "@mui/material/Skeleton";
-import { AppShell } from "@/components/app-shell";
 import { PatientTabs } from "@/components/patient-tabs";
 import { createClient } from "@/lib/supabase/server";
 
@@ -15,10 +14,10 @@ async function PatientFile({ params }: Pick<PageProps<"/clients/[id]">, "params"
 
 export default function PatientPage({ params }: PageProps<"/clients/[id]">) {
   return (
-    <AppShell>
+    <>
       <Suspense fallback={<Skeleton variant="rounded" height={420} />}>
         <PatientFile params={params} />
       </Suspense>
-    </AppShell>
+    </>
   );
 }

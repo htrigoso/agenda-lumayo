@@ -2,6 +2,7 @@
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { MotionConfig } from "framer-motion";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 
 const theme = createTheme({
@@ -24,7 +25,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <AppRouterCacheProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {children}
+        <MotionConfig reducedMotion="user">{children}</MotionConfig>
       </ThemeProvider>
     </AppRouterCacheProvider>
   );

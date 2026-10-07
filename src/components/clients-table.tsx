@@ -6,7 +6,6 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
@@ -15,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import type { Client } from "@/components/client-form";
 import { ClientAvatar } from "@/components/client-avatar";
+import { MotionTableBody, MotionTableRow, containerVariants, itemVariants } from "@/components/motion";
 import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
 import { formatRecordNumber } from "@/lib/record";
@@ -34,7 +34,7 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
             <TableCell align="right">Acciones</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <MotionTableBody variants={containerVariants} initial="hidden" animate="show">
           {clients.length === 0 && (
             <TableRow>
               <TableCell colSpan={6} align="center" sx={{ py: 6, color: "text.secondary" }}>
@@ -43,7 +43,7 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
             </TableRow>
           )}
           {clients.map((c) => (
-            <TableRow key={c.id} hover sx={c.is_priority ? { bgcolor: "rgba(237, 108, 2, 0.06)" } : undefined}>
+            <MotionTableRow key={c.id} variants={itemVariants} hover sx={c.is_priority ? { bgcolor: "rgba(237, 108, 2, 0.06)" } : undefined}>
               <TableCell>
                 <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
                   <ClientAvatar id={c.id} firstName={c.first_name} lastName={c.last_name} size={36} />
@@ -80,9 +80,9 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
                 </IconButton>
                 <DeleteClientButton id={c.id} name={`${c.first_name} ${c.last_name}`} />
               </TableCell>
-            </TableRow>
+            </MotionTableRow>
           ))}
-        </TableBody>
+        </MotionTableBody>
       </Table>
     </TableContainer>
   );

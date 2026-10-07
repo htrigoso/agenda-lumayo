@@ -13,9 +13,10 @@ import EditIcon from "@mui/icons-material/EditOutlined";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { loadMoreClients } from "@/app/clients/actions";
+import { loadMoreClients } from "@/app/(app)/clients/actions";
 import type { Client } from "@/components/client-form";
 import { ClientAvatar } from "@/components/client-avatar";
+import { AnimatePresence, LiftCard, Stagger } from "@/components/motion";
 import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
 import { formatRecordNumber } from "@/lib/record";
@@ -56,9 +57,10 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
   }
 
   return (
-    <Stack spacing={1.5}>
+    <Stagger spacing={1.5}>
+      <AnimatePresence initial={false}>
       {items.map((c) => (
-        <Paper key={c.id} sx={{ p: 2, ...(c.is_priority && { borderLeft: 4, borderColor: "warning.main" }) }}>
+        <LiftCard key={c.id} sx={{ p: 2, ...(c.is_priority && { borderLeft: 4, borderColor: "warning.main" }) }}>
           <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
             <ClientAvatar id={c.id} firstName={c.first_name} lastName={c.last_name} size={40} />
             <Box sx={{ flexGrow: 1, minWidth: 0 }}>
@@ -120,8 +122,9 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
               <PriorityChip />
             </Stack>
           )}
-        </Paper>
+        </LiftCard>
       ))}
+      </AnimatePresence>
 
       <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
         Mostrando {items.length} de {total - removed}
@@ -131,6 +134,6 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
           {pending ? "Cargando..." : "Ver más"}
         </Button>
       )}
-    </Stack>
+    </Stagger>
   );
 }

@@ -309,3 +309,22 @@ body {
 .tooth-zone:hover {
   fill: #cfeaf6 !important;
 }
+
+/* Press feedback on every MUI button (transform only). */
+.MuiButton-root,
+.MuiIconButton-root,
+.MuiChip-clickable {
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+.MuiButton-root:active,
+.MuiIconButton-root:active,
+.MuiChip-clickable:active {
+  transform: scale(0.96);
+}
+@media (prefers-reduced-motion: reduce) {
+  .MuiButton-root:active,
+  .MuiIconButton-root:active,
+  .MuiChip-clickable:active {
+    transform: none;
+  }
+}

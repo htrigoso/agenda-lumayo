@@ -15,7 +15,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { deleteAppointment, saveAppointment, searchClients } from "@/app/agenda/actions";
+import { deleteAppointment, saveAppointment, searchClients } from "@/app/(app)/agenda/actions";
 import {
   DURATIONS,
   STATUS,

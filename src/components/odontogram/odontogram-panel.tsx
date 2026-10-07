@@ -10,7 +10,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import SaveIcon from "@mui/icons-material/SaveOutlined";
-import { getOdontograms, saveOdontogram, type OdontogramKind } from "@/app/clients/clinical-actions";
+import { getOdontograms, saveOdontogram, type OdontogramKind } from "@/app/(app)/clients/clinical-actions";
 import { OdontogramEditor } from "@/components/odontogram/odontogram-editor";
 import { EMPTY_ODONTOGRAM, isEmptyOdontogram, type OdontogramData } from "@/lib/odontogram";
 

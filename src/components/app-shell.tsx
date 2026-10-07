@@ -19,11 +19,14 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import CalendarIcon from "@mui/icons-material/CalendarMonthOutlined";
 import ContactsIcon from "@mui/icons-material/Contacts";
+import BarChartIcon from "@mui/icons-material/BarChartOutlined";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServicesOutlined";
 import GroupIcon from "@mui/icons-material/GroupOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
+import { motion } from "framer-motion";
 import { logout } from "@/app/login/actions";
+import { EASE, MotionBox } from "@/components/motion";
 
 const DRAWER_WIDTH = 240;
 
@@ -31,7 +34,35 @@ const NAV = [
   { href: "/", label: "Pacientes", icon: <GroupIcon />, match: (p: string) => p === "/" || p.startsWith("/clients") },
   { href: "/servicios", label: "Servicios", icon: <MedicalServicesIcon />, match: (p: string) => p.startsWith("/servicios") },
   { href: "/agenda", label: "Agenda", icon: <CalendarIcon />, match: (p: string) => p.startsWith("/agenda") },
+  { href: "/reportes", label: "Reportes", icon: <BarChartIcon />, match: (p: string) => p.startsWith("/reportes") },
 ];
+
+const WIDE_ROUTES = ["/agenda", "/reportes"];
+
+function PageArea({ children, wide, animate }: { children: React.ReactNode; wide: boolean; animate: boolean }) {
+  return (
+    <Container maxWidth={wide ? "xl" : "lg"} sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
+      {animate ? (
+        <MotionBox initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: EASE }}>
+          {children}
+        </MotionBox>
+      ) : (
+        children
+      )}
+    </Container>
+  );
+}
+
+/** Keyed by pathname so each navigation replays the entrance; the sidebar around it never remounts. */
+function PageAreaWithPath({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const wide = WIDE_ROUTES.some((r) => pathname.startsWith(r));
+  return (
+    <PageArea key={pathname} wide={wide} animate>
+      {children}
+    </PageArea>
+  );
+}
 
 function NavList({ onNavigate }: { onNavigate: () => void }) {
   const pathname = usePathname();
@@ -50,24 +81,40 @@ function NavList({ onNavigate }: { onNavigate: () => void }) {
             py: 1.1,
             color: "rgba(255,255,255,0.78)",
             "&:hover": { bgcolor: "rgba(255,255,255,0.08)", color: "#fff" },
-            "&.Mui-selected": {
-              bgcolor: "rgba(25,180,216,0.2)",
-              color: "#fff",
-              boxShadow: "inset 3px 0 0 #19b4d8",
-            },
-            "&.Mui-selected:hover": { bgcolor: "rgba(25,180,216,0.28)" },
+            position: "relative",
+            "&.Mui-selected, &.Mui-selected:hover": { bgcolor: "transparent", color: "#fff" },
             "&.Mui-selected .MuiListItemIcon-root": { color: "#19b4d8" },
           }}
         >
-          <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>{item.icon}</ListItemIcon>
-          <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: 600 } } }} />
+          {item.match(pathname) && (
+            // Shared layoutId: the highlight glides from the previous item to this one.
+            <motion.span
+              layoutId="nav-pill"
+              transition={{ type: "spring", stiffness: 420, damping: 34 }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: 8,
+                background: "rgba(25,180,216,0.2)",
+                boxShadow: "inset 3px 0 0 #19b4d8",
+              }}
+            />
+          )}
+          <motion.span
+            whileHover={{ x: 4 }}
+            transition={{ type: "spring", stiffness: 400, damping: 24 }}
+            style={{ position: "relative", display: "flex", alignItems: "center", width: "100%" }}
+          >
+            <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: 600 } } }} />
+          </motion.span>
         </ListItemButton>
       ))}
     </List>
   );
 }
 
-export function AppShell({ children, wide = false }: { children: React.ReactNode; wide?: boolean }) {
+export function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
 
   const menu = (
@@ -171,9 +218,9 @@ export function AppShell({ children, wide = false }: { children: React.ReactNode
             </Typography>
           </Toolbar>
         </AppBar>
-        <Container maxWidth={wide ? "xl" : "lg"} sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
-          {children}
-        </Container>
+        <Suspense fallback={<PageArea wide={false} animate={false}>{children}</PageArea>}>
+          <PageAreaWithPath>{children}</PageAreaWithPath>
+        </Suspense>
       </Box>
     </Box>
   );

@@ -14,7 +14,8 @@ import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { listAppointments } from "@/app/agenda/actions";
+import { LiftCard, Stagger } from "@/components/motion";
+import { listAppointments } from "@/app/(app)/agenda/actions";
 import {
   STATUS,
   clientName,
@@ -124,10 +125,12 @@ export function DayList({ refreshKey, onCreate, onSelect }: Props) {
         <Paper sx={{ p: 4, textAlign: "center", color: "text.secondary" }}>No hay citas para este día.</Paper>
       )}
 
-      {items?.map((a) => {
+      {items && items.length > 0 && (
+        <Stagger key={day.getTime()} spacing={2}>
+          {items.map((a) => {
         const status = STATUS[a.status];
         return (
-          <Paper
+          <LiftCard
             key={a.id}
             onClick={() => onSelect(a)}
             sx={{ p: 2, cursor: "pointer", borderLeft: 5, borderColor: status.color, opacity: a.status === "cancelled" ? 0.65 : 1 }}
@@ -153,9 +156,11 @@ export function DayList({ refreshKey, onCreate, onSelect }: Props) {
                 />
               </Box>
             </Stack>
-          </Paper>
+          </LiftCard>
         );
       })}
+        </Stagger>
+      )}
 
       <Fab
         color="primary"
