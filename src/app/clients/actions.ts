@@ -13,6 +13,7 @@ function parse(formData: FormData) {
     whatsapp: get("whatsapp"),
     email: get("email"),
     description: get("description"),
+    is_priority: formData.get("is_priority") === "on",
   };
 }
 

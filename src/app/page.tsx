@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import StarIcon from "@mui/icons-material/Star";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -16,7 +18,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/EditOutlined";
@@ -55,13 +56,17 @@ function StatCard({ label, value, icon }: { label: string; value: number; icon: 
   );
 }
 
+function PriorityChip() {
+  return <Chip size="small" color="warning" icon={<StarIcon />} label="Potencial" sx={{ fontWeight: 600 }} />;
+}
+
 async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
   const { q } = await searchParams;
   const term = typeof q === "string" ? q.trim().replace(/[,()%]/g, "") : "";
 
   const supabase = await createClient();
   const { data: all } = await supabase.from("clients").select("id, whatsapp, email");
-  let query = supabase.from("clients").select("*").order("first_name");
+  let query = supabase.from("clients").select("*").order("is_priority", { ascending: false }).order("first_name");
   if (term) {
     query = query.or(
       `first_name.ilike.%${term}%,last_name.ilike.%${term}%,email.ilike.%${term}%,mobile.ilike.%${term}%`,
@@ -115,7 +120,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
               </TableRow>
             )}
             {clients?.map((c) => (
-              <TableRow key={c.id} hover>
+              <TableRow key={c.id} hover sx={c.is_priority ? { bgcolor: "rgba(237, 108, 2, 0.06)" } : undefined}>
                 <TableCell>
                   <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
                     <Avatar sx={{ bgcolor: "primary.light", width: 36, height: 36, fontSize: 14 }}>
@@ -125,6 +130,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
                     <Typography sx={{ fontWeight: 600 }}>
                       {c.first_name} {c.last_name}
                     </Typography>
+                    {c.is_priority && <PriorityChip />}
                   </Stack>
                 </TableCell>
                 <TableCell>{c.mobile ?? "—"}</TableCell>
@@ -142,11 +148,9 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
                   {c.description ?? "—"}
                 </TableCell>
                 <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
-                  <Tooltip title="Editar">
-                    <IconButton href={`/clients/${c.id}`}>
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
+                  <IconButton href={`/clients/${c.id}`} aria-label="Editar" title="Editar">
+                    <EditIcon />
+                  </IconButton>
                   <DeleteClientButton id={c.id} name={`${c.first_name} ${c.last_name}`} />
                 </TableCell>
               </TableRow>
@@ -162,7 +166,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
           </Paper>
         )}
         {clients?.map((c) => (
-          <Paper key={c.id} sx={{ p: 2 }}>
+          <Paper key={c.id} sx={{ p: 2, ...(c.is_priority && { borderLeft: 4, borderColor: "warning.main" }) }}>
             <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
               <Avatar sx={{ bgcolor: "primary.light", width: 40, height: 40, fontSize: 14 }}>
                 {(c.first_name[0] ?? "").toUpperCase()}
@@ -171,6 +175,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
               <Typography sx={{ fontWeight: 600, flexGrow: 1, minWidth: 0, overflowWrap: "anywhere" }}>
                 {c.first_name} {c.last_name}
               </Typography>
+              {c.is_priority && <PriorityChip />}
               <IconButton href={`/clients/${c.id}`} aria-label="Editar">
                 <EditIcon />
               </IconButton>

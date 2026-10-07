@@ -1,3 +1,7 @@
+"use client";
+
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -13,6 +17,7 @@ export type Client = {
   whatsapp: string | null;
   email: string | null;
   description: string | null;
+  is_priority: boolean;
 };
 
 export function ClientForm({ client }: { client?: Client }) {
@@ -33,6 +38,12 @@ export function ClientForm({ client }: { client?: Client }) {
         </Grid>
         <Grid size={12}>
           <TextField name="email" label="Correo" type="email" fullWidth defaultValue={client?.email ?? ""} />
+        </Grid>
+        <Grid size={12}>
+          <FormControlLabel
+            control={<Switch name="is_priority" defaultChecked={client?.is_priority ?? false} color="warning" />}
+            label="Cliente potencial (prioridad alta)"
+          />
         </Grid>
         <Grid size={12}>
           <TextField name="description" label="Descripción" multiline minRows={4} fullWidth defaultValue={client?.description ?? ""} />
