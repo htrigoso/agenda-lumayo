@@ -1,5 +1,6 @@
 "use client";
 
+import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
@@ -16,6 +17,7 @@ import type { Client } from "@/components/client-form";
 import { ClientAvatar } from "@/components/client-avatar";
 import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
+import { formatRecordNumber } from "@/lib/record";
 import { PriorityChip } from "@/components/priority-chip";
 
 export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emptyMessage: string }) {
@@ -45,9 +47,16 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
               <TableCell>
                 <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
                   <ClientAvatar id={c.id} firstName={c.first_name} lastName={c.last_name} size={36} />
-                  <Typography sx={{ fontWeight: 600 }}>
-                    {c.first_name} {c.last_name}
-                  </Typography>
+                  <Box>
+                    <Typography sx={{ fontWeight: 600 }}>
+                      {c.first_name} {c.last_name}
+                    </Typography>
+                    {c.record_number !== undefined && (
+                      <Typography variant="caption" color="text.secondary">
+                        H.C. {formatRecordNumber(c.record_number)}
+                      </Typography>
+                    )}
+                  </Box>
                   {c.is_priority && <PriorityChip />}
                 </Stack>
               </TableCell>

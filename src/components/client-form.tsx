@@ -20,6 +20,7 @@ export type Client = {
   email: string | null;
   description: string | null;
   is_priority: boolean;
+  record_number?: number;
   dni?: string | null;
   birth_date?: string | null;
   sex?: "M" | "F" | null;

@@ -2,7 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const PAGE_SIZE = 50;
 
-const COLUMNS = "id, first_name, last_name, mobile, whatsapp, email, description, is_priority";
+const COLUMNS =
+  "id, record_number, legacy_record_number, first_name, last_name, mobile, whatsapp, email, description, is_priority";
 
 export function sanitizeTerm(q: unknown) {
   return typeof q === "string" ? q.trim().replace(/[,()%]/g, "") : "";
@@ -20,8 +21,10 @@ export async function fetchClientsPage(
     .order("id");
   if (onlyPriority) query = query.eq("is_priority", true);
   if (term) {
+    // A purely numeric term also matches the clinic record number exactly.
+    const byNumber = /^\d{1,9}$/.test(term) ? `,record_number.eq.${Number(term)}` : "";
     query = query.or(
-      `first_name.ilike.%${term}%,last_name.ilike.%${term}%,email.ilike.%${term}%,mobile.ilike.%${term}%`,
+      `first_name.ilike.%${term}%,last_name.ilike.%${term}%,email.ilike.%${term}%,mobile.ilike.%${term}%${byNumber}`,
     );
   }
   return query.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);

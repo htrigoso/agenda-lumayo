@@ -22,10 +22,19 @@ import {
   type Attendance,
   type OpenItem,
 } from "@/app/clients/clinical-actions";
+import { formatRecordNumber } from "@/lib/record";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { AttendanceDialog } from "@/components/history/attendance-dialog";
 
-export function HistoryPanel({ clientId }: { clientId: string }) {
+export function HistoryPanel({
+  clientId,
+  recordNumber,
+  legacyNumber,
+}: {
+  clientId: string;
+  recordNumber?: number;
+  legacyNumber: string | null;
+}) {
   const [items, setItems] = useState<Attendance[] | null>(null);
   const [openItems, setOpenItems] = useState<OpenItem[]>([]);
   const [error, setError] = useState(false);
@@ -108,6 +117,22 @@ export function HistoryPanel({ clientId }: { clientId: string }) {
 
   return (
     <Stack spacing={3}>
+      {recordNumber !== undefined && (
+        <Paper variant="outlined" sx={{ p: 2, borderRadius: 3, bgcolor: "#f8fafc" }}>
+          <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
+            <Box>
+              <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase", letterSpacing: 1 }}>
+                Historia clínica
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 800, color: "primary.main" }}>
+                N.º {formatRecordNumber(recordNumber)}
+              </Typography>
+            </Box>
+            {legacyNumber && <Chip variant="outlined" label={`Historia anterior: ${legacyNumber}`} />}
+          </Stack>
+        </Paper>
+      )}
+
       <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between" }}>
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
           Historial de atenciones

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -17,6 +18,7 @@ import type { Client } from "@/components/client-form";
 import { ClientAvatar } from "@/components/client-avatar";
 import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
+import { formatRecordNumber } from "@/lib/record";
 import { PriorityChip } from "@/components/priority-chip";
 
 type Props = {
@@ -59,9 +61,16 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
         <Paper key={c.id} sx={{ p: 2, ...(c.is_priority && { borderLeft: 4, borderColor: "warning.main" }) }}>
           <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
             <ClientAvatar id={c.id} firstName={c.first_name} lastName={c.last_name} size={40} />
-            <Typography sx={{ fontWeight: 600, flexGrow: 1, minWidth: 0, overflowWrap: "anywhere" }}>
-              {c.first_name} {c.last_name}
-            </Typography>
+            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+              <Typography sx={{ fontWeight: 600, overflowWrap: "anywhere" }}>
+                {c.first_name} {c.last_name}
+              </Typography>
+              {c.record_number !== undefined && (
+                <Typography variant="caption" color="text.secondary">
+                  H.C. {formatRecordNumber(c.record_number)}
+                </Typography>
+              )}
+            </Box>
             <IconButton href={`/clients/${c.id}`} aria-label="Editar">
               <EditIcon />
             </IconButton>
