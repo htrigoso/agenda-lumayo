@@ -38,7 +38,7 @@ export function ClientForm({ client }: { client?: Client }) {
           <TextField name="description" label="Descripción" multiline minRows={4} fullWidth defaultValue={client?.description ?? ""} />
         </Grid>
       </Grid>
-      <Stack direction="row" spacing={1} sx={{ justifyContent: "flex-end", mt: 3 }}>
+      <Stack direction={{ xs: "column-reverse", sm: "row" }} spacing={1} sx={{ justifyContent: "flex-end", mt: 3 }}>
         <Button href="/" color="inherit">
           Cancel
         </Button>

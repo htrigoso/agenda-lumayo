@@ -1,10 +1,12 @@
 import { Suspense } from "react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
+import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import Paper from "@mui/material/Paper";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
@@ -28,13 +30,24 @@ import { createClient } from "@/lib/supabase/server";
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
   return (
-    <Paper sx={{ p: 2.5, display: "flex", alignItems: "center", gap: 2 }}>
-      <Avatar sx={{ bgcolor: "primary.main", color: "primary.contrastText" }}>{icon}</Avatar>
+    <Paper
+      sx={{
+        p: { xs: 1.5, sm: 2.5 },
+        display: "flex",
+        flexDirection: { xs: "column", sm: "row" },
+        alignItems: { xs: "flex-start", sm: "center" },
+        gap: { xs: 1, sm: 2 },
+        height: "100%",
+      }}
+    >
+      <Avatar sx={{ bgcolor: "primary.main", color: "primary.contrastText", width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 } }}>
+        {icon}
+      </Avatar>
       <Box>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, lineHeight: 1.1 }}>
           {value}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: 12, sm: 14 } }}>
           {label}
         </Typography>
       </Box>
@@ -62,14 +75,14 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
 
   return (
     <Stack spacing={3}>
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 4 }}>
+      <Grid container spacing={{ xs: 1, sm: 2 }}>
+        <Grid size={4}>
           <StatCard label="Total de clientes" value={total} icon={<GroupIcon />} />
         </Grid>
-        <Grid size={{ xs: 12, sm: 4 }}>
+        <Grid size={4}>
           <StatCard label="Con WhatsApp" value={withWhatsapp} icon={<WhatsAppIcon />} />
         </Grid>
-        <Grid size={{ xs: 12, sm: 4 }}>
+        <Grid size={4}>
           <StatCard label="Con correo" value={withEmail} icon={<EmailIcon />} />
         </Grid>
       </Grid>
@@ -81,7 +94,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
         </Button>
       </Stack>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ display: { xs: "none", md: "block" } }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -141,6 +154,63 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Stack spacing={1.5} sx={{ display: { xs: "flex", md: "none" } }}>
+        {clients?.length === 0 && (
+          <Paper sx={{ p: 4, textAlign: "center", color: "text.secondary" }}>
+            {term ? "Ningún cliente coincide con tu búsqueda." : "Aún no hay clientes. ¡Agrega el primero!"}
+          </Paper>
+        )}
+        {clients?.map((c) => (
+          <Paper key={c.id} sx={{ p: 2 }}>
+            <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
+              <Avatar sx={{ bgcolor: "primary.light", width: 40, height: 40, fontSize: 14 }}>
+                {(c.first_name[0] ?? "").toUpperCase()}
+                {(c.last_name[0] ?? "").toUpperCase()}
+              </Avatar>
+              <Typography sx={{ fontWeight: 600, flexGrow: 1, minWidth: 0, overflowWrap: "anywhere" }}>
+                {c.first_name} {c.last_name}
+              </Typography>
+              <IconButton href={`/clients/${c.id}`} aria-label="Editar">
+                <EditIcon />
+              </IconButton>
+              <DeleteClientButton id={c.id} name={`${c.first_name} ${c.last_name}`} />
+            </Stack>
+            {(c.mobile || c.whatsapp || c.email || c.description) && <Divider sx={{ my: 1.5 }} />}
+            <Stack spacing={0.75}>
+              {c.mobile && (
+                <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+                  <PhoneIcon fontSize="small" color="action" />
+                  <Link href={`tel:${c.mobile}`} underline="hover" color="inherit">
+                    {c.mobile}
+                  </Link>
+                </Stack>
+              )}
+              {c.whatsapp && (
+                <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+                  <WhatsAppIcon fontSize="small" sx={{ color: "#25d366" }} />
+                  <Link href={`https://wa.me/${c.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" underline="hover">
+                    {c.whatsapp}
+                  </Link>
+                </Stack>
+              )}
+              {c.email && (
+                <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+                  <EmailIcon fontSize="small" color="action" />
+                  <Link href={`mailto:${c.email}`} underline="hover" color="inherit" sx={{ overflowWrap: "anywhere" }}>
+                    {c.email}
+                  </Link>
+                </Stack>
+              )}
+              {c.description && (
+                <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
+                  {c.description}
+                </Typography>
+              )}
+            </Stack>
+          </Paper>
+        ))}
+      </Stack>
     </Stack>
   );
 }

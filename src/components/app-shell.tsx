@@ -1,6 +1,7 @@
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -15,16 +16,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Toolbar>
           <ContactsIcon color="primary" sx={{ mr: 1.5 }} />
           <Typography variant="h6" sx={{ fontWeight: 700, flexGrow: 1 }}>
-            Lumayo · Agenda de Clientes
+            Lumayo<Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}> · Agenda de Clientes</Box>
           </Typography>
           <form action={logout}>
-            <Button type="submit" color="inherit" startIcon={<LogoutIcon />}>
+            <Button type="submit" color="inherit" startIcon={<LogoutIcon />} sx={{ display: { xs: "none", sm: "inline-flex" } }}>
               Cerrar sesión
             </Button>
+            <IconButton type="submit" color="inherit" aria-label="Cerrar sesión" sx={{ display: { xs: "inline-flex", sm: "none" } }}>
+              <LogoutIcon />
+            </IconButton>
           </form>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
         {children}
       </Container>
     </Box>
