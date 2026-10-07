@@ -16,6 +16,13 @@ function parse(formData: FormData) {
     email: get("email"),
     description: get("description"),
     is_priority: formData.get("is_priority") === "on",
+    dni: get("dni"),
+    birth_date: get("birth_date"),
+    sex: get("sex"),
+    address: get("address"),
+    occupation: get("occupation"),
+    emergency_contact: get("emergency_contact"),
+    legacy_record_number: get("legacy_record_number"),
   };
 }
 

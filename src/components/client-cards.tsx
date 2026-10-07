@@ -48,7 +48,7 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
   if (items.length === 0) {
     return (
       <Paper sx={{ p: 4, textAlign: "center", color: "text.secondary" }}>
-        {term || onlyPriority ? "Ningún cliente coincide con tu búsqueda." : "Aún no hay clientes. ¡Agrega el primero!"}
+        {term || onlyPriority ? "Ningún paciente coincide con tu búsqueda." : "Aún no hay pacientes. ¡Agrega el primero!"}
       </Paper>
     );
   }

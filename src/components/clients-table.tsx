@@ -24,7 +24,7 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Cliente</TableCell>
+            <TableCell>Paciente</TableCell>
             <TableCell>Celular</TableCell>
             <TableCell>WhatsApp</TableCell>
             <TableCell>Correo</TableCell>

@@ -34,7 +34,7 @@ export type AppointmentInput = {
 };
 
 export function clientName(a: Appointment) {
-  return a.client ? `${a.client.first_name} ${a.client.last_name}` : "Cliente eliminado";
+  return a.client ? `${a.client.first_name} ${a.client.last_name}` : "Paciente eliminado";
 }
 
 export function endsAt(a: Appointment) {

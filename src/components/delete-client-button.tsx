@@ -24,7 +24,7 @@ export function DeleteClientButton({ id, name, onDeleted }: { id: string; name: 
         </IconButton>
       </Tooltip>
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>¿Eliminar cliente?</DialogTitle>
+        <DialogTitle>¿Eliminar paciente?</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {name} se eliminará de forma permanente. Esta acción no se puede deshacer.

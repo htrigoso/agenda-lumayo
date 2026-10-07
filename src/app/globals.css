@@ -304,3 +304,8 @@ body {
     justify-content: center;
   }
 }
+
+/* Odontogram */
+.tooth-zone:hover {
+  fill: #cfeaf6 !important;
+}

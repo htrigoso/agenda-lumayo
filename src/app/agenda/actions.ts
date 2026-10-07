@@ -20,7 +20,7 @@ export async function listAppointments(fromISO: string, toISO: string) {
 }
 
 export async function saveAppointment(input: AppointmentInput): Promise<{ error?: string }> {
-  if (!input.client_id) return { error: "Selecciona un cliente." };
+  if (!input.client_id) return { error: "Selecciona un paciente." };
   if (Number.isNaN(Date.parse(input.starts_at))) return { error: "La fecha y hora no son válidas." };
 
   const supabase = await createClient();

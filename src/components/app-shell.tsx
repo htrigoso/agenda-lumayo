@@ -19,6 +19,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import CalendarIcon from "@mui/icons-material/CalendarMonthOutlined";
 import ContactsIcon from "@mui/icons-material/Contacts";
+import MedicalServicesIcon from "@mui/icons-material/MedicalServicesOutlined";
 import GroupIcon from "@mui/icons-material/GroupOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -27,7 +28,8 @@ import { logout } from "@/app/login/actions";
 const DRAWER_WIDTH = 240;
 
 const NAV = [
-  { href: "/", label: "Clientes", icon: <GroupIcon />, match: (p: string) => p === "/" || p.startsWith("/clients") },
+  { href: "/", label: "Pacientes", icon: <GroupIcon />, match: (p: string) => p === "/" || p.startsWith("/clients") },
+  { href: "/servicios", label: "Servicios", icon: <MedicalServicesIcon />, match: (p: string) => p.startsWith("/servicios") },
   { href: "/agenda", label: "Agenda", icon: <CalendarIcon />, match: (p: string) => p.startsWith("/agenda") },
 ];
 

@@ -89,7 +89,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
     <Stack spacing={3}>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         <Grid size={4}>
-          <StatCard label="Total de clientes" value={total} icon={<GroupIcon />} />
+          <StatCard label="Total de pacientes" value={total} icon={<GroupIcon />} />
         </Grid>
         <Grid size={4}>
           <StatCard label="Con WhatsApp" value={withWhatsapp} icon={<WhatsAppIcon />} />
@@ -102,7 +102,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
         <SearchBox initial={term} onlyPriority={onlyPriority} />
         <Button href="/clients/new" variant="contained" startIcon={<AddIcon />}>
-          Nuevo cliente
+          Nuevo paciente
         </Button>
       </Stack>
 
@@ -124,7 +124,7 @@ export default function HomePage({ searchParams }: PageProps<"/">) {
   return (
     <AppShell>
       <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
-        Clientes
+        Pacientes
       </Typography>
       <Suspense fallback={<Skeleton variant="rounded" height={320} />}>
         <Dashboard searchParams={searchParams} />

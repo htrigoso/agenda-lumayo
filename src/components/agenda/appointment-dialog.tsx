@@ -101,7 +101,7 @@ function AppointmentForm({
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!client) return setError("Selecciona un cliente.");
+    if (!client) return setError("Selecciona un paciente.");
     const date = new Date(startsAt);
     if (Number.isNaN(date.getTime())) return setError("La fecha y hora no son válidas.");
     setError(null);
@@ -157,7 +157,7 @@ function AppointmentForm({
                 </li>
               );
             }}
-            renderInput={(params) => <TextField {...params} label="Cliente" required />}
+            renderInput={(params) => <TextField {...params} label="Paciente" required />}
           />
           <TextField
             label="Fecha y hora"

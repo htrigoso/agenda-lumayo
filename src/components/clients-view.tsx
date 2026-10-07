@@ -37,7 +37,7 @@ export function ClientsView({ clients, matches, page, pageCount, from, to, term,
   const showTable = hydrated ? isDesktop : true;
   const showCards = hydrated ? !isDesktop : true;
   const emptyMessage =
-    term || onlyPriority ? "Ningún cliente coincide con tu búsqueda." : "Aún no hay clientes. ¡Agrega el primero!";
+    term || onlyPriority ? "Ningún paciente coincide con tu búsqueda." : "Aún no hay pacientes. ¡Agrega el primero!";
 
   return (
     <>
