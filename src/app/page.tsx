@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import StarIcon from "@mui/icons-material/Star";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -25,6 +23,7 @@ import EmailIcon from "@mui/icons-material/EmailOutlined";
 import GroupIcon from "@mui/icons-material/GroupOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { AppShell } from "@/components/app-shell";
+import { PriorityChip } from "@/components/priority-chip";
 import { DeleteClientButton } from "@/components/delete-client-button";
 import { SearchBox } from "@/components/search-box";
 import { createClient } from "@/lib/supabase/server";
@@ -56,17 +55,15 @@ function StatCard({ label, value, icon }: { label: string; value: number; icon: 
   );
 }
 
-function PriorityChip() {
-  return <Chip size="small" color="warning" icon={<StarIcon />} label="Potencial" sx={{ fontWeight: 600 }} />;
-}
-
 async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
-  const { q } = await searchParams;
+  const { q, potential } = await searchParams;
+  const onlyPriority = potential === "1";
   const term = typeof q === "string" ? q.trim().replace(/[,()%]/g, "") : "";
 
   const supabase = await createClient();
   const { data: all } = await supabase.from("clients").select("id, whatsapp, email");
   let query = supabase.from("clients").select("*").order("is_priority", { ascending: false }).order("first_name");
+  if (onlyPriority) query = query.eq("is_priority", true);
   if (term) {
     query = query.or(
       `first_name.ilike.%${term}%,last_name.ilike.%${term}%,email.ilike.%${term}%,mobile.ilike.%${term}%`,
@@ -93,7 +90,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
       </Grid>
 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <SearchBox initial={term} />
+        <SearchBox initial={term} onlyPriority={onlyPriority} />
         <Button href="/clients/new" variant="contained" startIcon={<AddIcon />}>
           Nuevo cliente
         </Button>
@@ -115,7 +112,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
             {clients?.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} align="center" sx={{ py: 6, color: "text.secondary" }}>
-                  {term ? "Ningún cliente coincide con tu búsqueda." : "Aún no hay clientes. ¡Agrega el primero!"}
+                  {term || onlyPriority ? "Ningún cliente coincide con tu búsqueda." : "Aún no hay clientes. ¡Agrega el primero!"}
                 </TableCell>
               </TableRow>
             )}
@@ -162,7 +159,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
       <Stack spacing={1.5} sx={{ display: { xs: "flex", md: "none" } }}>
         {clients?.length === 0 && (
           <Paper sx={{ p: 4, textAlign: "center", color: "text.secondary" }}>
-            {term ? "Ningún cliente coincide con tu búsqueda." : "Aún no hay clientes. ¡Agrega el primero!"}
+            {term || onlyPriority ? "Ningún cliente coincide con tu búsqueda." : "Aún no hay clientes. ¡Agrega el primero!"}
           </Paper>
         )}
         {clients?.map((c) => (
