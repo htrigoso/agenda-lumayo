@@ -7,7 +7,6 @@ import Paper from "@mui/material/Paper";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import Stack from "@mui/material/Stack";
-import { formatMoney } from "@/lib/money";
 
 // Only transform + opacity are animated: cheap on phones and friendly to reduced-motion settings
 // (MotionConfig in Providers turns transform animations off when the OS asks for it).
@@ -71,9 +70,9 @@ export function Reveal({ children, delay = 0, y = 16 }: { children: React.ReactN
 }
 
 /** Counts up to `value` (integers or soles). Shows the final number straight away for reduced motion. */
-export function AnimatedNumber({ value, kind = "int" }: { value: number; kind?: "int" | "money" }) {
+export function AnimatedNumber({ value }: { value: number }) {
   const reduce = useReducedMotion();
-  const format = (v: number) => (kind === "money" ? formatMoney(v) : Math.round(v).toLocaleString("es-PE"));
+  const format = (v: number) => Math.round(v).toLocaleString("es-PE");
   const motionValue = useMotionValue(0);
   const text = useTransform(motionValue, format);
 

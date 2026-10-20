@@ -17,10 +17,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import CalendarIcon from "@mui/icons-material/CalendarMonthOutlined";
 import ContactsIcon from "@mui/icons-material/Contacts";
-import BarChartIcon from "@mui/icons-material/BarChartOutlined";
-import MedicalServicesIcon from "@mui/icons-material/MedicalServicesOutlined";
 import GroupIcon from "@mui/icons-material/GroupOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -32,16 +29,11 @@ const DRAWER_WIDTH = 240;
 
 const NAV = [
   { href: "/", label: "Pacientes", icon: <GroupIcon />, match: (p: string) => p === "/" || p.startsWith("/clients") },
-  { href: "/servicios", label: "Servicios", icon: <MedicalServicesIcon />, match: (p: string) => p.startsWith("/servicios") },
-  { href: "/agenda", label: "Agenda", icon: <CalendarIcon />, match: (p: string) => p.startsWith("/agenda") },
-  { href: "/reportes", label: "Reportes", icon: <BarChartIcon />, match: (p: string) => p.startsWith("/reportes") },
 ];
 
-const WIDE_ROUTES = ["/agenda", "/reportes"];
-
-function PageArea({ children, wide, animate }: { children: React.ReactNode; wide: boolean; animate: boolean }) {
+function PageArea({ children, animate }: { children: React.ReactNode; animate: boolean }) {
   return (
-    <Container maxWidth={wide ? "xl" : "lg"} sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
+    <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
       {animate ? (
         <MotionBox initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: EASE }}>
           {children}
@@ -56,9 +48,8 @@ function PageArea({ children, wide, animate }: { children: React.ReactNode; wide
 /** Keyed by pathname so each navigation replays the entrance; the sidebar around it never remounts. */
 function PageAreaWithPath({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const wide = WIDE_ROUTES.some((r) => pathname.startsWith(r));
   return (
-    <PageArea key={pathname} wide={wide} animate>
+    <PageArea key={pathname} animate>
       {children}
     </PageArea>
   );
@@ -218,7 +209,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Suspense fallback={<PageArea wide={false} animate={false}>{children}</PageArea>}>
+        <Suspense fallback={<PageArea animate={false}>{children}</PageArea>}>
           <PageAreaWithPath>{children}</PageAreaWithPath>
         </Suspense>
       </Box>

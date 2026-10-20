@@ -15,6 +15,7 @@ import { ClientsView } from "@/components/clients-view";
 import { SearchBox } from "@/components/search-box";
 import { PAGE_SIZE, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
 import { createClient } from "@/lib/supabase/server";
+import { connection } from "next/server";
 
 function pageHref(page: number, term: string, onlyPriority: boolean) {
   const params = new URLSearchParams();
@@ -26,6 +27,8 @@ function pageHref(page: number, term: string, onlyPriority: boolean) {
 }
 
 async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
+  // Per-request, per-user data: render at request time, never prerender it.
+  await connection();
   const { q, potential, page: pageParam } = await searchParams;
   const onlyPriority = potential === "1";
   const term = sanitizeTerm(q);

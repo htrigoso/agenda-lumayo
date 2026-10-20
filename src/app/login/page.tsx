@@ -142,7 +142,7 @@ export default function LoginPage() {
           sx={{ position: "relative", zIndex: 2, maxWidth: 480 }}
         >
           <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: 1.15 }}>
-            Bienvenido a la agenda de Lumayo
+            Bienvenido a Lumayo
           </Typography>
           <Typography sx={{ mt: 2, color: "rgba(255,255,255,0.65)" }}>
             Centro Odontológico. Organiza los datos de contacto de tus pacientes y encuéntralos rápido cuando los necesites.
