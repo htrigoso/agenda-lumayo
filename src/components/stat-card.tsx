@@ -5,12 +5,25 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { AnimatedNumber, EASE, MotionPaper } from "@/components/motion";
 
-export function StatCard({ label, value, icon, index = 0 }: { label: string; value: number; icon: React.ReactNode; index?: number }) {
+export function StatCard({
+  label,
+  value,
+  icon,
+  index = 0,
+  color = "primary.main",
+}: {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+  index?: number;
+  /** Background of the icon badge. */
+  color?: string;
+}) {
   return (
     <MotionPaper
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4, boxShadow: "0 12px 28px rgba(11,37,69,0.16)" }}
+      whileHover={{ y: -4, boxShadow: "0 1px 2px rgba(26,47,81,0.06), 0 14px 28px -16px rgba(26,47,81,0.35)" }}
       transition={{ duration: 0.35, ease: EASE, delay: index * 0.08 }}
       sx={{
         p: { xs: 1.5, sm: 2.5 },
@@ -21,7 +34,7 @@ export function StatCard({ label, value, icon, index = 0 }: { label: string; val
         height: "100%",
       }}
     >
-      <Avatar sx={{ bgcolor: "primary.main", color: "primary.contrastText", width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 } }}>
+      <Avatar sx={{ bgcolor: color, color: "#fff", width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 } }}>
         {icon}
       </Avatar>
       <Box>

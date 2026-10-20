@@ -40,6 +40,8 @@ export async function saveClient(id: string | null, formData: FormData) {
 export async function deleteClient(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("clients").delete().eq("id", id);
+  // The membership link is ON DELETE RESTRICT: a card holder or member cannot be deleted.
+  if (error?.code === "23503") throw new Error("Este paciente pertenece a una membresía. Quítalo de la membresía antes de eliminarlo.");
   if (error) throw new Error(error.message);
   revalidatePath("/");
 }

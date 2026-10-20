@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
@@ -16,6 +17,7 @@ import { SearchBox } from "@/components/search-box";
 import { PAGE_SIZE, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
 import { createClient } from "@/lib/supabase/server";
 import { connection } from "next/server";
+import { AQUA, AZUL } from "@/lib/brand";
 
 function pageHref(page: number, term: string, onlyPriority: boolean) {
   const params = new URLSearchParams();
@@ -96,6 +98,30 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
 export default function HomePage({ searchParams }: PageProps<"/">) {
   return (
     <>
+      <Box
+        sx={{
+          mb: 3,
+          p: { xs: 2.5, sm: 3.5 },
+          borderRadius: 2.5,
+          color: "#fff",
+          background: `linear-gradient(120deg, ${AZUL[700]} 0%, ${AZUL[800]} 100%)`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 2,
+          flexWrap: "wrap",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Box component="img" src="/lumayo+centro-white.svg" alt="Lumayo Centro Odontológico" sx={{ width: { xs: 170, sm: 230 }, height: "auto", display: "block" }} />
+        <Box sx={{ textAlign: { xs: "left", sm: "right" } }}>
+          <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.15 }}>
+            Bienvenido a Lumayo
+          </Typography>
+          <Typography sx={{ color: AQUA[200], fontSize: 14 }}>Pacientes, membresías y seguimiento en un solo lugar.</Typography>
+        </Box>
+      </Box>
       <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
         Pacientes
       </Typography>

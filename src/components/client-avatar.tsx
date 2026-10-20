@@ -1,20 +1,8 @@
 import Avatar from "@mui/material/Avatar";
+import { AQUA, AZUL } from "@/lib/brand";
 
-// Dark enough for white initials to stay readable.
-const COLORS = [
-  "#c62828",
-  "#ad1457",
-  "#6a1b9a",
-  "#4527a0",
-  "#283593",
-  "#1565c0",
-  "#00838f",
-  "#00695c",
-  "#2e7d32",
-  "#bf360c",
-  "#4e342e",
-  "#37474f",
-];
+// Brand blues and aquas (Brandbook V2, pág. 10), dark enough for white initials to stay readable.
+const COLORS = [AZUL[700], AZUL[800], AZUL[900], AZUL[950], AQUA[600], AQUA[700], AQUA[800], AZUL[600]];
 
 function colorFor(seed: string) {
   let hash = 0;

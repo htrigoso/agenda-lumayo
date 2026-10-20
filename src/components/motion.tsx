@@ -49,7 +49,7 @@ export function LiftCard({ children, sx, onClick }: { children: React.ReactNode;
       variants={itemVariants}
       layout="position"
       exit={{ opacity: 0, x: -48, transition: { duration: 0.2 } }}
-      whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(11,37,69,0.14)" }}
+      whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(26,47,81,0.14)" }}
       whileTap={{ scale: 0.985 }}
       transition={{ type: "spring", stiffness: 380, damping: 26 }}
       sx={sx}

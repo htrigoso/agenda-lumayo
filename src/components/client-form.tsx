@@ -30,6 +30,7 @@ export type Client = {
   occupation?: string | null;
   emergency_contact?: string | null;
   legacy_record_number?: string | null;
+  membership?: { id: string; code: string; plan: "classic" | "gold" } | null;
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

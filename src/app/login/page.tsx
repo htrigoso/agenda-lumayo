@@ -1,180 +1,239 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useSyncExternalStore } from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import Alert from "@mui/material/Alert";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import CircularProgress from "@mui/material/CircularProgress";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import ContactsIcon from "@mui/icons-material/Contacts";
-import GroupIcon from "@mui/icons-material/GroupOutlined";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import SearchIcon from "@mui/icons-material/Search";
-import Image from "next/image";
-import { motion } from "framer-motion";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import { EASE, MotionBox, MotionStack, StaggerItem, containerVariants } from "@/components/motion";
+import { AQUA, AZUL, INK, LINE } from "@/lib/brand";
 import { login } from "./actions";
 
-const features = [
-  { icon: <GroupIcon />, text: "Todos tus clientes en un solo lugar" },
-  { icon: <WhatsAppIcon />, text: "Escríbeles por WhatsApp con un clic" },
-  { icon: <SearchIcon />, text: "Encuentra cualquier contacto al instante" },
-];
+const REMEMBER_KEY = "lumayo:login-email";
+
+// Remembered email lives only in this browser; storage can be unavailable (private mode), so never throw.
+function readRemembered() {
+  try {
+    return localStorage.getItem(REMEMBER_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+function writeRemembered(email: string | null) {
+  try {
+    if (email) localStorage.setItem(REMEMBER_KEY, email);
+    else localStorage.removeItem(REMEMBER_KEY);
+  } catch {
+    // Ignore: remembering the email is a convenience.
+  }
+}
+const noopSubscribe = () => () => {};
+
+// Flat brand surfaces: a single soft shadow only hints at separation (Brandbook V2).
+const CARD_SHADOW = "0 1px 2px rgba(26,47,81,0.06), 0 24px 48px -28px rgba(26,47,81,0.28)";
+
+const fieldSx = {
+  "& .MuiOutlinedInput-root": {
+    bgcolor: "#fff",
+    transition: "box-shadow .2s ease",
+    "& fieldset": { borderColor: LINE },
+    "&:hover fieldset": { borderColor: AZUL[300] },
+    "&.Mui-focused": { boxShadow: "0 0 0 4px rgba(35,100,194,0.12)" },
+    "&.Mui-focused fieldset": { borderColor: AZUL[700], borderWidth: 1.5 },
+  },
+  // Browser autofill paints its own background; keep the field white and the text on brand.
+  "& input:-webkit-autofill": {
+    WebkitBoxShadow: "0 0 0 100px #fff inset",
+    WebkitTextFillColor: INK[900],
+    caretColor: INK[900],
+    borderRadius: "inherit",
+  },
+};
 
 export default function LoginPage() {
-  const [error, action, pending] = useActionState(login, null);
+  const [state, action, pending] = useActionState(login, null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [capsLock, setCapsLock] = useState(false);
+  // Server renders "", the browser reads storage after hydration.
+  const remembered = useSyncExternalStore(noopSubscribe, readRemembered, () => "");
+  const initialEmail = state?.email ?? remembered;
+
+  function rememberOnSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const data = new FormData(e.currentTarget);
+    writeRemembered(data.get("remember") ? String(data.get("email") ?? "").trim() : null);
+  }
+
+  const checkCaps = (e: React.KeyboardEvent) => setCapsLock(e.getModifierState("CapsLock"));
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" } }}>
-      <Box sx={{ display: "grid", placeItems: "center", p: 3, bgcolor: "background.paper" }}>
-        <Box component="form" action={action} sx={{ width: "100%", maxWidth: 360 }}>
-          <MotionStack variants={containerVariants} initial="hidden" animate="show" spacing={2.5}>
-            <StaggerItem>
-              <motion.div
-                initial={{ scale: 0.4, rotate: -20 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 260, damping: 16 }}
-                style={{ width: 48 }}
-              >
-                <Avatar sx={{ bgcolor: "primary.main", width: 48, height: 48 }}>
-                  <ContactsIcon />
-                </Avatar>
-              </motion.div>
-            </StaggerItem>
-            <StaggerItem>
-            <Box>
-              <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                Iniciar sesión
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                Lumayo · Centro Odontológico
-              </Typography>
-            </Box>
-            </StaggerItem>
-            <StaggerItem>
-              <TextField name="email" type="email" label="Correo" required fullWidth autoFocus />
-            </StaggerItem>
-            <StaggerItem>
-              <TextField name="password" type="password" label="Contraseña" required fullWidth />
-            </StaggerItem>
-            {error && (
-              <motion.div initial={{ x: 0 }} animate={{ x: [0, -8, 8, -6, 6, 0] }} transition={{ duration: 0.4 }}>
-                <Alert severity="error">{error}</Alert>
-              </motion.div>
-            )}
-            <StaggerItem>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                <Button type="submit" variant="contained" size="large" disabled={pending} fullWidth>
-                  {pending ? "Ingresando..." : "Ingresar"}
-                </Button>
-              </motion.div>
-            </StaggerItem>
-          </MotionStack>
-        </Box>
-      </Box>
-
-      <Box
+    <Box sx={{ minHeight: "100dvh", display: "grid", placeItems: "center", p: { xs: 2, sm: 4 }, bgcolor: AZUL[50] }}>
+      <MotionBox
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: EASE }}
         sx={{
-          display: { xs: "none", md: "flex" },
-          alignItems: "flex-end",
-          justifyContent: "flex-start",
-          p: { md: 5, lg: 7 },
-          color: "common.white",
-          position: "relative",
+          width: "100%",
+          maxWidth: { xs: 420, md: 960 },
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          bgcolor: "#fff",
+          borderRadius: "24px",
           overflow: "hidden",
-          background: "linear-gradient(160deg, #0b3c6e 0%, #082b52 60%, #0a4a82 100%)",
-          "&::before, &::after": {
-            content: '""',
-            position: "absolute",
-            borderRadius: "50%",
-            border: "90px solid rgba(25,180,216,0.18)",
-            zIndex: 1,
-            pointerEvents: "none",
-          },
-          "&::before": { width: 560, height: 560, top: -240, right: -160 },
-          "&::after": { width: 700, height: 700, bottom: -380, left: -220 },
+          border: `1px solid ${LINE}`,
+          boxShadow: CARD_SHADOW,
         }}
       >
-        {/* Photo (slow zoom-out on load) under a brand-blue veil that deepens toward the text. */}
-        <MotionBox
-          aria-hidden
-          initial={{ scale: 1.14 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 2.2, ease: EASE }}
-          sx={{ position: "absolute", inset: 0, zIndex: 0 }}
-        >
-          <Image
-            src="/images/login-dentists.jpg"
-            alt=""
-            fill
-            sizes="50vw"
-            style={{ objectFit: "cover", objectPosition: "50% 30%" }}
-          />
-        </MotionBox>
-        <Box
-          aria-hidden
-          sx={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 0,
-            background:
-              "linear-gradient(180deg, rgba(11,60,110,0.45) 0%, rgba(8,43,82,0.35) 30%, rgba(8,43,82,0.82) 68%, rgba(6,33,63,0.96) 100%)",
-          }}
-        />
-        <motion.div
-          aria-hidden
-          animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: "absolute", zIndex: 1, top: "14%", right: "10%", width: 90, height: 90, borderRadius: "50%", background: "rgba(25,180,216,0.28)", filter: "blur(2px)" }}
-        />
-        <motion.div
-          aria-hidden
-          animate={{ y: [0, 26, 0], x: [0, -14, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: "absolute", zIndex: 1, top: "38%", left: "8%", width: 56, height: 56, borderRadius: "50%", background: "rgba(255,255,255,0.14)" }}
-        />
-        <MotionBox
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
-          sx={{ position: "relative", zIndex: 2, maxWidth: 480 }}
-        >
-          <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: 1.15 }}>
-            Bienvenido a Lumayo
-          </Typography>
-          <Typography sx={{ mt: 2, color: "rgba(255,255,255,0.65)" }}>
-            Centro Odontológico. Organiza los datos de contacto de tus pacientes y encuéntralos rápido cuando los necesites.
-          </Typography>
-          <Stack spacing={1.5} sx={{ mt: 4 }}>
-            {features.map((f, i) => (
-              <MotionStack
-                key={f.text}
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, ease: EASE, delay: 0.45 + i * 0.12 }}
-                direction="row"
-                spacing={1.5}
-                sx={{
-                  alignItems: "center",
-                  px: 1.5,
-                  py: 1,
-                  borderRadius: 3,
-                  bgcolor: "rgba(255,255,255,0.1)",
-                  border: "1px solid rgba(255,255,255,0.18)",
-                  backdropFilter: "blur(8px)",
-                }}
-              >
-                <Avatar sx={{ bgcolor: "rgba(255,255,255,0.1)", color: "#19b4d8", width: 36, height: 36 }}>
-                  {f.icon}
-                </Avatar>
-                <Typography variant="body2">{f.text}</Typography>
-              </MotionStack>
-            ))}
-          </Stack>
-        </MotionBox>
-      </Box>
+        <Box sx={{ px: { xs: 3, sm: 6 }, py: { xs: 5, sm: 7 } }}>
+          <Box component="form" action={action} onSubmit={rememberOnSubmit}>
+            <MotionStack variants={containerVariants} initial="hidden" animate="show" spacing={3}>
+              <StaggerItem>
+                <Box component="img" src="/images/lumayo-logo.svg" alt="Lumayo" sx={{ display: "block", width: 128, height: "auto" }} />
+              </StaggerItem>
+
+              <StaggerItem>
+                <Typography component="h1" sx={{ fontSize: { xs: 26, sm: 30 }, fontWeight: 400, lineHeight: 1.1, letterSpacing: "-0.03em", color: AZUL[950] }}>
+                  Bienvenido de <Box component="span" sx={{ fontWeight: 800 }}>vuelta</Box>
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  Ingresa con tu correo y contraseña.
+                </Typography>
+              </StaggerItem>
+
+              <StaggerItem>
+                <Stack spacing={2}>
+                  <TextField
+                    key={initialEmail}
+                    name="email"
+                    type="email"
+                    label="Correo"
+                    defaultValue={initialEmail}
+                    required
+                    fullWidth
+                    autoFocus={!initialEmail}
+                    autoComplete="username"
+                    sx={fieldSx}
+                    slotProps={{ inputLabel: { required: false } }}
+                  />
+                  <TextField
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    label="Contraseña"
+                    required
+                    fullWidth
+                    autoFocus={!!initialEmail}
+                    autoComplete="current-password"
+                    onKeyDown={checkCaps}
+                    onKeyUp={checkCaps}
+                    onBlur={() => setCapsLock(false)}
+                    sx={fieldSx}
+                    helperText={capsLock ? "Bloq Mayús está activado" : undefined}
+                    slotProps={{
+                      inputLabel: { required: false },
+                      formHelperText: { sx: { color: "#c26a12", fontWeight: 600, mx: 0 } },
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              edge="end"
+                              size="small"
+                              onClick={() => setShowPassword((v) => !v)}
+                              onMouseDown={(e) => e.preventDefault()}
+                              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                              aria-pressed={showPassword}
+                              sx={{ color: INK[400] }}
+                            >
+                              {showPassword ? <VisibilityOffRoundedIcon fontSize="small" /> : <VisibilityRoundedIcon fontSize="small" />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                  <FormControlLabel
+                    key={remembered}
+                    control={<Checkbox name="remember" defaultChecked={remembered !== ""} size="small" />}
+                    label={<Typography variant="body2" color="text.secondary">Recordar mi correo</Typography>}
+                    sx={{ mt: -0.5 }}
+                  />
+                </Stack>
+              </StaggerItem>
+
+              <Box aria-live="polite" sx={{ "&:empty": { display: "none" } }}>
+                {state?.error && (
+                  <motion.div initial={{ x: 0 }} animate={{ x: [0, -8, 8, -6, 6, 0] }} transition={{ duration: 0.4 }}>
+                    <Alert severity="error">{state.error}</Alert>
+                  </motion.div>
+                )}
+              </Box>
+
+              <StaggerItem>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  size="large"
+                  disabled={pending}
+                  fullWidth
+                  sx={{
+                    py: 1.4,
+                    fontSize: 15,
+                    bgcolor: AZUL[700],
+                    boxShadow: "0 8px 20px -12px rgba(35,100,194,0.8)",
+                    "&:hover": { bgcolor: AZUL[800], boxShadow: "0 10px 24px -12px rgba(35,100,194,0.9)" },
+                    "&.Mui-disabled": { color: "#fff", bgcolor: AZUL[700], opacity: 0.75 },
+                  }}
+                >
+                  {pending ? (
+                    <Stack direction="row" spacing={1.25} sx={{ alignItems: "center" }}>
+                      <CircularProgress size={18} sx={{ color: "#fff" }} />
+                      <span>Ingresando...</span>
+                    </Stack>
+                  ) : (
+                    "Ingresar"
+                  )}
+                </Button>
+              </StaggerItem>
+
+              <StaggerItem>
+                <Typography variant="caption" sx={{ display: "block", color: INK[400] }}>
+                  ¿Problemas para ingresar? Consulta con el administrador.
+                </Typography>
+              </StaggerItem>
+            </MotionStack>
+          </Box>
+        </Box>
+
+        {/* Brand panel: photo under a flat brand-blue veil, one message. */}
+        <Box sx={{ display: { xs: "none", md: "flex" }, position: "relative", alignItems: "flex-end", p: 6, color: "#fff", minHeight: 560, bgcolor: AZUL[700] }}>
+          <MotionBox aria-hidden initial={{ scale: 1.08 }} animate={{ scale: 1 }} transition={{ duration: 1.8, ease: EASE }} sx={{ position: "absolute", inset: 0 }}>
+            <Image src="/images/login-dentists.jpg" alt="" fill sizes="480px" priority style={{ objectFit: "cover", objectPosition: "50% 30%" }} />
+          </MotionBox>
+          <Box aria-hidden sx={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, rgba(35,100,194,0.55) 0%, rgba(35,100,194,0.72) 50%, ${AZUL[900]} 100%)` }} />
+          <MotionBox
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
+            sx={{ position: "relative" }}
+          >
+            <Typography sx={{ fontSize: 12, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: AQUA[300] }}>
+              Centro Odontológico
+            </Typography>
+            <Typography sx={{ mt: 1, fontSize: 34, fontWeight: 400, lineHeight: 1.08, letterSpacing: "-0.03em" }}>
+              Tu sonrisa nos inspira a dar <Box component="span" sx={{ fontWeight: 800 }}>el primer paso.</Box>
+            </Typography>
+          </MotionBox>
+        </Box>
+      </MotionBox>
     </Box>
   );
 }

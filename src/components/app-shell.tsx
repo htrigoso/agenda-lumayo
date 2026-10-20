@@ -3,7 +3,6 @@
 import { Suspense, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import Avatar from "@mui/material/Avatar";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -17,18 +16,20 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import ContactsIcon from "@mui/icons-material/Contacts";
+import CardMembershipIcon from "@mui/icons-material/CardMembershipOutlined";
 import GroupIcon from "@mui/icons-material/GroupOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import { motion } from "framer-motion";
 import { logout } from "@/app/login/actions";
 import { EASE, MotionBox } from "@/components/motion";
+import { AQUA, AZUL } from "@/lib/brand";
 
 const DRAWER_WIDTH = 240;
 
 const NAV = [
   { href: "/", label: "Pacientes", icon: <GroupIcon />, match: (p: string) => p === "/" || p.startsWith("/clients") },
+  { href: "/membresias", label: "Membresías", icon: <CardMembershipIcon />, match: (p: string) => p.startsWith("/membresias") },
 ];
 
 function PageArea({ children, animate }: { children: React.ReactNode; animate: boolean }) {
@@ -74,7 +75,7 @@ function NavList({ onNavigate }: { onNavigate: () => void }) {
             "&:hover": { bgcolor: "rgba(255,255,255,0.08)", color: "#fff" },
             position: "relative",
             "&.Mui-selected, &.Mui-selected:hover": { bgcolor: "transparent", color: "#fff" },
-            "&.Mui-selected .MuiListItemIcon-root": { color: "#19b4d8" },
+            "&.Mui-selected .MuiListItemIcon-root": { color: AQUA[300] },
           }}
         >
           {item.match(pathname) && (
@@ -86,8 +87,8 @@ function NavList({ onNavigate }: { onNavigate: () => void }) {
                 position: "absolute",
                 inset: 0,
                 borderRadius: 8,
-                background: "rgba(25,180,216,0.2)",
-                boxShadow: "inset 3px 0 0 #19b4d8",
+                background: "rgba(97,214,215,0.2)",
+                boxShadow: `inset 3px 0 0 ${AQUA[300]}`,
               }}
             />
           )}
@@ -117,32 +118,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         display: "flex",
         flexDirection: "column",
         color: "#fff",
-        background: "linear-gradient(170deg, #0b3c6e 0%, #082b52 65%, #06213f 100%)",
+        background: `linear-gradient(170deg, ${AZUL[700]} 0%, ${AZUL[800]} 100%)`,
         "&::before": {
           content: '""',
           position: "absolute",
           width: 260,
           height: 260,
           borderRadius: "50%",
-          border: "46px solid rgba(25,180,216,0.14)",
+          border: "46px solid rgba(97,214,215,0.14)",
           bottom: -90,
           left: -110,
           pointerEvents: "none",
         },
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, px: 2.5, py: 3 }}>
-        <Avatar sx={{ bgcolor: "#19b4d8", color: "#fff", width: 42, height: 42, boxShadow: "0 4px 12px rgba(25,180,216,0.45)" }}>
-          <ContactsIcon />
-        </Avatar>
-        <Box>
-          <Typography sx={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1, letterSpacing: 0.5 }}>Lumayo</Typography>
-          <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.65)", letterSpacing: 1.2, textTransform: "uppercase", fontSize: 10 }}>
-            Centro Odontológico
-          </Typography>
-        </Box>
+      <Box sx={{ px: 2.5, py: 3 }}>
+        {/* Firma con descriptor: primer contacto (Brandbook V2, pág. 5). */}
+        <Box component="img" src="/lumayo+centro-white.svg" alt="Lumayo Centro Odontológico" sx={{ display: "block", width: 170, height: "auto" }} />
       </Box>
-      <Typography variant="overline" sx={{ px: 2.5, color: "rgba(255,255,255,0.5)", letterSpacing: 1.5 }}>
+      <Typography variant="overline" sx={{ px: 2.5, color: "rgba(255,255,255,0.5)", letterSpacing: 1.5, fontWeight: 500 }}>
         Menú
       </Typography>
       <Suspense fallback={null}>
@@ -196,7 +190,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           elevation={0}
           sx={{
             display: { md: "none" },
-            background: "linear-gradient(90deg, #0b3c6e 0%, #082b52 100%)",
+            background: `linear-gradient(90deg, ${AZUL[700]} 0%, ${AZUL[800]} 100%)`,
             color: "#fff",
           }}
         >
