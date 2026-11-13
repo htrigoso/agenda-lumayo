@@ -21,6 +21,7 @@ import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
 import { formatRecordNumber } from "@/lib/record";
 import { PriorityChip } from "@/components/priority-chip";
+import { SaveContactButton } from "@/components/save-contact-button";
 
 type Props = {
   initial: Client[];
@@ -73,6 +74,7 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
                 </Typography>
               )}
             </Box>
+            <SaveContactButton id={c.id} mobile={c.mobile} />
             <IconButton href={`/clients/${c.id}`} aria-label="Editar">
               <EditIcon />
             </IconButton>

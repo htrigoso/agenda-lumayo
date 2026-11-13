@@ -19,6 +19,7 @@ import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
 import { formatRecordNumber } from "@/lib/record";
 import { PriorityChip } from "@/components/priority-chip";
+import { SaveContactButton } from "@/components/save-contact-button";
 
 export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emptyMessage: string }) {
   return (
@@ -31,13 +32,14 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
             <TableCell>WhatsApp</TableCell>
             <TableCell>Correo</TableCell>
             <TableCell>Descripción</TableCell>
+            <TableCell align="center">Contacto</TableCell>
             <TableCell align="right">Acciones</TableCell>
           </TableRow>
         </TableHead>
         <MotionTableBody variants={containerVariants} initial="hidden" animate="show">
           {clients.length === 0 && (
             <TableRow>
-              <TableCell colSpan={6} align="center" sx={{ py: 6, color: "text.secondary" }}>
+              <TableCell colSpan={7} align="center" sx={{ py: 6, color: "text.secondary" }}>
                 {emptyMessage}
               </TableCell>
             </TableRow>
@@ -73,6 +75,9 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
               <TableCell>{c.email ?? "—"}</TableCell>
               <TableCell sx={{ maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {c.description ?? "—"}
+              </TableCell>
+              <TableCell align="center">
+                <SaveContactButton id={c.id} mobile={c.mobile} />
               </TableCell>
               <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
                 <IconButton href={`/clients/${c.id}`} aria-label="Editar" title="Editar">
