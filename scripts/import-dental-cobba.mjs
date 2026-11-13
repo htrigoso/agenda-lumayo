@@ -118,7 +118,7 @@ fill as (
     legacy_record_number = coalesce(c.legacy_record_number, s.legacy_record_number),
     whatsapp = coalesce(c.whatsapp, s.whatsapp),
     description = case when c.description is null then s.description
-                       when position('${IMPORT_MARK}' in c.description) > 0 then c.description
+                       when position(s.description in c.description) > 0 then c.description
                        else c.description || E'\\n\\n' || s.description end,
     updated_at = now()
   from src s
@@ -130,7 +130,7 @@ select s.* from src s
 where not exists (
   select 1 from public.clients c
   where c.user_id = s.user_id
-    and (${MATCH} or position('${IMPORT_MARK}' in coalesce(c.description, '')) > 0 and c.first_name = s.first_name and c.last_name = s.last_name)
+    and (${MATCH} or (s.first_name <> '' and position('${IMPORT_MARK}' in coalesce(c.description, '')) > 0 and c.first_name = s.first_name and c.last_name = s.last_name))
 );
 commit;`);
 

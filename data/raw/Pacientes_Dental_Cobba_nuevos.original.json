@@ -1,0 +1,1181 @@
+{
+  "fuente": "Fotos nuevas de fichas Dental Cobba (carpeta nuevo, 40 imágenes, 2026-11-13)",
+  "total_pacientes": 27,
+  "pacientes": [
+    {
+      "n": 200,
+      "historia_clinica": "",
+      "fecha": "2/11/2026",
+      "nombre": "Rolando Moises Garcia Hidalgo",
+      "edad": "15",
+      "sexo": "M",
+      "fecha_nacimiento": "27/10/2011",
+      "dni": "6296??18",
+      "telefono": "944733595",
+      "ocupacion": "",
+      "direccion": "Las Margaritas 122 - La Banda de Shilcayo",
+      "motivo_consulta": "",
+      "descripcion": "Curación (piezas 17): S/ 850",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "17",
+          "presupuesto": "S/ 850"
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Hora 9:26 am. Anotado arriba: '02-11 Pasta provisional'; cita 9:00 am 03/11. Emergencia: mamá, Escalante Mego Rosalinda (DNI 78252831). Enfermedad actual: N. El '17' puede ser cantidad de curaciones o la pieza 17.",
+      "datos_por_verificar": "DNI: dígitos 5 y 6 sobrescritos; primer nombre (Rolando?); fecha corregida; '17' cantidad o pieza",
+      "fotos": [
+        "11.20.49 (1).jpeg",
+        "11.20.49.jpeg"
+      ]
+    },
+    {
+      "n": 201,
+      "historia_clinica": "",
+      "fecha": "02/11/2026",
+      "nombre": "Marelith Amaringo Amasifuen",
+      "edad": "29",
+      "sexo": "F",
+      "fecha_nacimiento": "05/03/1997",
+      "dni": "76983658",
+      "telefono": "934331565",
+      "ocupacion": "Asistente",
+      "direccion": "",
+      "motivo_consulta": "",
+      "descripcion": "Curación (piezas 46): S/ 50",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "46",
+          "presupuesto": "S/ 50"
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Paciente ya registrada en la hoja (HC 2903); esta es otra ficha. Cita 6:00 pm 03/11. Enfermedad actual: N. Figura en el listado impreso de agosto con el mismo DNI.",
+      "datos_por_verificar": "Día de nacimiento (05?)",
+      "fotos": [
+        "11.20.49 (2).jpeg"
+      ]
+    },
+    {
+      "n": 202,
+      "historia_clinica": "",
+      "fecha": "02/11/2026",
+      "nombre": "Beatriz Alva Huatlinga",
+      "edad": "26",
+      "sexo": "M",
+      "fecha_nacimiento": "01/05/1999",
+      "dni": "71649404",
+      "telefono": "930280860?",
+      "ocupacion": "",
+      "direccion": "",
+      "motivo_consulta": "",
+      "descripcion": "Limpieza + TG: S/ 100 + 80\nCuración (11 piezas): S/ 580\nEndodoncia: S/ 400\nPerno: S/ 100\nCorona: S/ 400\nPasta provisional: S/ 30 (400 tachado)",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Limpieza + TG",
+          "piezas": "",
+          "presupuesto": "S/ 100 + 80"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "11 (cantidad)",
+          "presupuesto": "S/ 580"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Endodoncia",
+          "piezas": "",
+          "presupuesto": "S/ 400"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Perno",
+          "piezas": "",
+          "presupuesto": "S/ 100"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Corona",
+          "piezas": "",
+          "presupuesto": "S/ 400"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Pasta provisional",
+          "piezas": "",
+          "presupuesto": "S/ 30 (400 tachado)"
+        }
+      ],
+      "total": 1580.0,
+      "total_texto": "S/ 1,580 (1,600 tachado)",
+      "notas": "Fecha según sello 02 NOV 2026. Cita 7:00 pm, 1 endodoncia. Tratamientos numerados del 1 al 5 por prioridad; '900' junto al perno = subtotal endodoncia + perno + corona. Total corregido de 1,600 a 1,580. Sexo escrito 'M' aunque el nombre es femenino.",
+      "datos_por_verificar": "Apellido Huatlinga?; teléfono con 10 dígitos o sobrescrito; 'TG'; +80 o +50; sexo",
+      "fotos": [
+        "11.20.50 (1).jpeg"
+      ]
+    },
+    {
+      "n": 203,
+      "historia_clinica": "",
+      "fecha": "03/11/2026",
+      "nombre": "Kevin Jhosert Espinoza Benites",
+      "edad": "17",
+      "sexo": "M",
+      "fecha_nacimiento": "28/02/2009",
+      "dni": "35895122",
+      "telefono": "929965608",
+      "ocupacion": "",
+      "direccion": "La Banda de Shilcayo",
+      "motivo_consulta": "",
+      "descripcion": "Curación (12 piezas): S/ 600 - 50\nExodoncia (2 piezas): S/ 100",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "12 (cantidad)",
+          "presupuesto": "S/ 600 - 50"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Exodoncia",
+          "piezas": "2 (cantidad)",
+          "presupuesto": "S/ 100"
+        }
+      ],
+      "total": 700.0,
+      "total_texto": "S/ 700",
+      "notas": "Cita 9:00 am curación. Sello 03 NOV 2026. Curación S/ 600 con descuento de 50; total S/ 700.",
+      "datos_por_verificar": "DNI empieza con 3 (poco común); nombre Jhosert",
+      "fotos": [
+        "11.20.50 (2).jpeg",
+        "11.20.50 (3).jpeg"
+      ]
+    },
+    {
+      "n": 204,
+      "historia_clinica": "",
+      "fecha": "03/11/2026",
+      "nombre": "Blas Carhuachin Arias",
+      "edad": "50",
+      "sexo": "M",
+      "fecha_nacimiento": "28/11/1976",
+      "dni": "80594228",
+      "telefono": "949280987",
+      "ocupacion": "Conductor",
+      "direccion": "Psj. Los Alamos - Lima",
+      "motivo_consulta": "",
+      "descripcion": "Tratamiento gingival (piezas 26): S/ 50",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Tratamiento gingival",
+          "piezas": "26",
+          "presupuesto": "S/ 50"
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Enfermedad actual: N.",
+      "datos_por_verificar": "Apellido Carhuachin",
+      "fotos": [
+        "11.20.50 (4).jpeg"
+      ]
+    },
+    {
+      "n": 205,
+      "historia_clinica": "",
+      "fecha": "02/11/2026",
+      "nombre": "Clara Caballero Isuiza",
+      "edad": "54",
+      "sexo": "F",
+      "fecha_nacimiento": "02/09/1972",
+      "dni": "01101605",
+      "telefono": "914627228",
+      "ocupacion": "Ama de casa",
+      "direccion": "",
+      "motivo_consulta": "",
+      "descripcion": "Exodoncia: S/ 50",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Exodoncia",
+          "piezas": "",
+          "presupuesto": "S/ 50"
+        }
+      ],
+      "total": 50.0,
+      "total_texto": "S/ 50",
+      "notas": "Hora 4:30 pm. Escrito como 'Extracción'. Odontograma marca aprox. la pieza 47.",
+      "datos_por_verificar": "Mes de nacimiento (09?)",
+      "fotos": [
+        "11.20.50.jpeg"
+      ]
+    },
+    {
+      "n": 206,
+      "historia_clinica": "",
+      "fecha": "04/11/2026",
+      "nombre": "Hardy Armas Dahua",
+      "edad": "59",
+      "sexo": "M",
+      "fecha_nacimiento": "30/03/1967",
+      "dni": "01114127",
+      "telefono": "98812130?",
+      "ocupacion": "Independiente",
+      "direccion": "",
+      "motivo_consulta": "Consulta odontológica",
+      "descripcion": "Limpieza (+ TG tachado): S/ 100 (150 corregido)\nCuración caries (6 piezas): S/ 300\nCuración de cuello (7 piezas): S/ 350",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Limpieza (+ TG tachado)",
+          "piezas": "",
+          "presupuesto": "S/ 100 (150 corregido)"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación caries",
+          "piezas": "6 (cantidad)",
+          "presupuesto": "S/ 300"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación de cuello",
+          "piezas": "7 (cantidad)",
+          "presupuesto": "S/ 350"
+        }
+      ],
+      "total": 750.0,
+      "total_texto": "S/ 750",
+      "notas": "Cita miércoles 11, 10 am. Todo en tinta roja. Total corregido a 750.",
+      "datos_por_verificar": "Nombre (Hardy Armas?); año de la fecha parece 2020; último dígito del teléfono sobrescrito; limpieza 100 o 150",
+      "fotos": [
+        "11.20.51 (1).jpeg"
+      ]
+    },
+    {
+      "n": 207,
+      "historia_clinica": "",
+      "fecha": "04/11/2026",
+      "nombre": "Llamo Isuiza Pardo",
+      "edad": "67",
+      "sexo": "F",
+      "fecha_nacimiento": "2/08/1959",
+      "dni": "01096581",
+      "telefono": "940825441",
+      "ocupacion": "Ama de casa",
+      "direccion": "Urb. Miraflores Mz H Lt 12 - La Banda de Shilcayo",
+      "motivo_consulta": "",
+      "descripcion": "Prótesis removible inferior y superior S/ 1600 - Implantes (sup.) (piezas 27, 26, 25, 17, 12, 14): S/ 15,000\nImplantes (piezas ?, 37, 35): S/ 6,000\nCorona inferior izquierdo (piezas 48, 47, 46, 45, 44): S/ 2,000\nCorona inferior derecho (piezas 33, 34, 35, 36, 37): S/ 2,000\nCorona superior izquierdo (piezas 17, 16, 15, 14, 13, 12, 11, 21): S/ 3,000 (6,000 corregido)\nCorona superior derecho (piezas 22, 23, 24, 25, 26, 27): S/ 2,000",
+      "diagnosticos": [
+        {
+          "diagnostico": "Prótesis removible inferior y superior S/ 1600",
+          "tratamiento": "Implantes (sup.)",
+          "piezas": "27, 26, 25, 17, 12, 14",
+          "presupuesto": "S/ 15,000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Implantes",
+          "piezas": "?, 37, 35",
+          "presupuesto": "S/ 6,000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Corona inferior izquierdo",
+          "piezas": "48, 47, 46, 45, 44",
+          "presupuesto": "S/ 2,000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Corona inferior derecho",
+          "piezas": "33, 34, 35, 36, 37",
+          "presupuesto": "S/ 2,000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Corona superior izquierdo",
+          "piezas": "17, 16, 15, 14, 13, 12, 11, 21",
+          "presupuesto": "S/ 3,000 (6,000 corregido)"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Corona superior derecho",
+          "piezas": "22, 23, 24, 25, 26, 27",
+          "presupuesto": "S/ 2,000"
+        }
+      ],
+      "total": 24480.0,
+      "total_texto": "S/ 30,600",
+      "notas": "Sello 04 NOV 2026. Enfermedad actual: presión alta, descalcificación (?), artrosis. Descuento: 'Se descontó 6,120', 20% = 24,480 (30,600 menos 20%). Alternativa anotada: prótesis removible inferior y superior S/ 1,600.",
+      "datos_por_verificar": "Primer nombre (Llamo?) y apellido Pardo; primera pieza de la 2da fila de implantes sobrescrita",
+      "fotos": [
+        "11.20.51 (2).jpeg"
+      ]
+    },
+    {
+      "n": 208,
+      "historia_clinica": "",
+      "fecha": "05/11/2026",
+      "nombre": "Royer Gabriel Tapullima Ruiz",
+      "edad": "14",
+      "sexo": "Masculino",
+      "fecha_nacimiento": "08/01/2012",
+      "dni": "78865927",
+      "telefono": "994120246",
+      "ocupacion": "",
+      "direccion": "Jr. Amazonas Mz T Lt 1 - La Banda de Shilcayo",
+      "motivo_consulta": "",
+      "descripcion": "Reconstrucción (piezas 11, 21): S/ 180",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Reconstrucción",
+          "piezas": "11, 21",
+          "presupuesto": "S/ 180"
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Emergencia: Bremilda Ruiz Silva, 48845929. El 'TOTAL 30,600' visible abajo es de la hoja de otra paciente (Isuiza Pardo), no de este paciente.",
+      "datos_por_verificar": "Presupuesto 180 o 100 (sobrescrito); nombre Royer; 4to dígito del teléfono",
+      "fotos": [
+        "11.20.51 (3).jpeg"
+      ]
+    },
+    {
+      "n": 209,
+      "historia_clinica": "",
+      "fecha": "05/11/2026",
+      "nombre": "Rondon Sias Perez",
+      "edad": "61",
+      "sexo": "Masculino",
+      "fecha_nacimiento": "19/03/1965",
+      "dni": "00019028",
+      "telefono": "995166213",
+      "ocupacion": "Mecánico",
+      "direccion": "Las Casuarinas Mz E Lt 3 - La Banda de Shilcayo",
+      "motivo_consulta": "",
+      "descripcion": "Curación caries: S/ 850\nCuración cuello: S/ 1100\nExodoncia: S/ 80",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación caries",
+          "piezas": "",
+          "presupuesto": "S/ 850"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación cuello",
+          "piezas": "",
+          "presupuesto": "S/ 1100"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Exodoncia",
+          "piezas": "",
+          "presupuesto": "S/ 80"
+        }
+      ],
+      "total": 2030.0,
+      "total_texto": "S/ 2030",
+      "notas": "Cita sábado 11:00 am. Escrito como 'Extracción'. Enfermedad actual: N.",
+      "datos_por_verificar": "Primer nombre (Rondon?); edad y año de nacimiento sobrescritos",
+      "fotos": [
+        "11.20.51 (4).jpeg"
+      ]
+    },
+    {
+      "n": 210,
+      "historia_clinica": "",
+      "fecha": "03/11/2026",
+      "nombre": "Miguel Angel Espinoza Davila",
+      "edad": "57",
+      "sexo": "M",
+      "fecha_nacimiento": "18/05/1969",
+      "dni": "01118177",
+      "telefono": "942716534",
+      "ocupacion": "Docente",
+      "direccion": "Jr. Carretera Marginal Sur 420",
+      "motivo_consulta": "Consulta odontológica",
+      "descripcion": "Curación de 5 cuello (tachado)\nPrótesis superior (P.S.) (piezas 15, 14, 13, 12, 11): S/ 2000\nEndodoncia (2 piezas): S/ 800 (1200 tachado)\nCuración de cuello (piezas 15, 13): S/ 100\nPerno (2 piezas): S/ 200\nPz 11 Lg18 - Lima 70 (piezas 11; también Pz 25 Lg18, 13 Lg18): S/ 2900",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación de 5 cuello (tachado)",
+          "piezas": "",
+          "presupuesto": ""
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Prótesis superior (P.S.)",
+          "piezas": "15, 14, 13, 12, 11",
+          "presupuesto": "S/ 2000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Endodoncia",
+          "piezas": "2 dientes",
+          "presupuesto": "S/ 800 (1200 tachado)"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación de cuello",
+          "piezas": "15, 13",
+          "presupuesto": "S/ 100"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Perno",
+          "piezas": "2",
+          "presupuesto": "S/ 200"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Pz 11 Lg18 - Lima 70",
+          "piezas": "11; también Pz 25 Lg18, 13 Lg18",
+          "presupuesto": "S/ 2900"
+        }
+      ],
+      "total": 3100.0,
+      "total_texto": "S/ 3100 (2900 corregido)",
+      "notas": "Cita 04/11 3:30 pm. Pagos: adelanto S/ 500 + 200 + 100; en rojo '1500 adelanto' junto a la prótesis y '300' junto a la endodoncia. Las anotaciones 'Lg' / 'Lima' parecen longitudes de trabajo de endodoncia. Total corregido de 2,900 a 3,100.",
+      "datos_por_verificar": "Montos muy sobrescritos en rojo; historial de pagos poco claro; total 3,100 o 3,400",
+      "fotos": [
+        "11.20.51.jpeg"
+      ]
+    },
+    {
+      "n": 211,
+      "historia_clinica": "",
+      "fecha": "05/11/2026",
+      "nombre": "Sergio Panduro Baltazar",
+      "edad": "39",
+      "sexo": "Masculino",
+      "fecha_nacimiento": "18/Nov/1983",
+      "dni": "44886101",
+      "telefono": "917400775",
+      "ocupacion": "Docente Matemática",
+      "direccion": "",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Limpieza: S/ 100\nCuración caries (10): S/ 500\nReconstrucción (piezas 11, 21): S/ 160",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Limpieza",
+          "piezas": "",
+          "presupuesto": "S/ 100"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación caries (10)",
+          "piezas": "",
+          "presupuesto": "S/ 500"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Reconstrucción",
+          "piezas": "11, 21",
+          "presupuesto": "S/ 160"
+        }
+      ],
+      "total": 760.0,
+      "total_texto": "S/ 760",
+      "notas": "Enfermedad actual: N. Texto tachado después de 'Limpieza'. Precio de reconstrucción encerrado con check.",
+      "datos_por_verificar": "Curación 50 o 500; reconstrucción 160 (cuadra con el total 760); último dígito del DNI",
+      "fotos": [
+        "11.20.51 (5).jpeg"
+      ]
+    },
+    {
+      "n": 212,
+      "historia_clinica": "",
+      "fecha": "06-NOV-2026",
+      "nombre": "Heyner La Torre Sembrera",
+      "edad": "",
+      "sexo": "",
+      "fecha_nacimiento": "",
+      "dni": "49013660",
+      "telefono": "908658253",
+      "ocupacion": "Independiente",
+      "direccion": "",
+      "motivo_consulta": "",
+      "descripcion": "Curación (piezas 11, 12): S/ 160 (ancla?)\nLimpieza + tratamiento G.: S/ 150\nExtracción: S/ 80\nCuración caries: S/ 750\nCuración cuello: S/ 290",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "11, 12",
+          "presupuesto": "S/ 160 (ancla?)"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Limpieza + tratamiento G.",
+          "piezas": "",
+          "presupuesto": "S/ 150"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Extracción",
+          "piezas": "",
+          "presupuesto": "S/ 80"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación caries",
+          "piezas": "",
+          "presupuesto": "S/ 750"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación cuello",
+          "piezas": "",
+          "presupuesto": "S/ 290"
+        }
+      ],
+      "total": 1230.0,
+      "total_texto": "S/ 1230",
+      "notas": "Hora 3:30 pm. Nota 'Pasta provisional' junto al primer tratamiento. Los montos suman 1,430, no 1,230. El 'TOTAL 550 / Terminado' de abajo es de la hoja de Billy Pinedo.",
+      "datos_por_verificar": "Precio de extracción sobrescrito (80/180); curación caries 750; palabra junto a 160",
+      "fotos": [
+        "11.20.52 (1).jpeg"
+      ]
+    },
+    {
+      "n": 213,
+      "historia_clinica": "",
+      "fecha": "06-NOV-2026",
+      "nombre": "",
+      "edad": "22",
+      "sexo": "",
+      "fecha_nacimiento": "",
+      "dni": "71273398",
+      "telefono": "968591009",
+      "ocupacion": "Estudiante",
+      "direccion": "",
+      "motivo_consulta": "Consulta odontológica / Limpieza",
+      "descripcion": "Limpieza: S/ 100",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Limpieza",
+          "piezas": "",
+          "presupuesto": "S/ 100"
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Ficha sin nombre.",
+      "datos_por_verificar": "",
+      "fotos": [
+        "11.20.52 (2).jpeg"
+      ]
+    },
+    {
+      "n": 214,
+      "historia_clinica": "3033",
+      "fecha": "09-NOV-2026",
+      "nombre": "Jesus Gonzales Tuanama",
+      "edad": "",
+      "sexo": "F",
+      "fecha_nacimiento": "",
+      "dni": "",
+      "telefono": "72298592",
+      "ocupacion": "Independiente",
+      "direccion": "Jr. Ricardo Palma 189",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Limpieza + F.G.: S/ 150\nRenovación de corona: S/ 800\nCuración cuello: S/ 50\nCuración: S/ 600\nPuente metal con porcelana: S/ 800\nExtracción (piezas 47): S/ 50",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Limpieza + F.G.",
+          "piezas": "",
+          "presupuesto": "S/ 150"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Renovación de corona",
+          "piezas": "",
+          "presupuesto": "S/ 800"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación cuello",
+          "piezas": "",
+          "presupuesto": "S/ 50"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "",
+          "presupuesto": "S/ 600"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Puente metal con porcelana",
+          "piezas": "",
+          "presupuesto": "S/ 800"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Extracción",
+          "piezas": "47",
+          "presupuesto": "S/ 50"
+        }
+      ],
+      "total": 2400.0,
+      "total_texto": "S/ 2400",
+      "notas": "'Cita' escrito arriba sin hora. Precio de extracción sobrescrito con check; los primeros 5 tratamientos suman 2,400.",
+      "datos_por_verificar": "Sexo 'F' con nombre masculino; teléfono con solo 8 dígitos (puede ser DNI); precio de extracción",
+      "fotos": [
+        "11.20.52 (3).jpeg",
+        "11.20.53 (2).jpeg"
+      ]
+    },
+    {
+      "n": 215,
+      "historia_clinica": "",
+      "fecha": "02/11/2026",
+      "nombre": "",
+      "edad": "",
+      "sexo": "",
+      "fecha_nacimiento": "",
+      "dni": "01061886",
+      "telefono": "937591343",
+      "ocupacion": "",
+      "direccion": "Psj. Alfonso Mendez - La Banda de Shilcayo",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Extracción",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Extracción",
+          "piezas": "",
+          "presupuesto": ""
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Cita tachada arriba (6:00 pm). Sin nombre ni precio.",
+      "datos_por_verificar": "Nombre de la calle",
+      "fotos": [
+        "11.20.52 (4).jpeg"
+      ]
+    },
+    {
+      "n": 216,
+      "historia_clinica": "",
+      "fecha": "05-NOV-2026",
+      "nombre": "Billy Pinedo Napuchi",
+      "edad": "6",
+      "sexo": "Masculino",
+      "fecha_nacimiento": "12-09-2020",
+      "dni": "81891530",
+      "telefono": "988353170",
+      "ocupacion": "",
+      "direccion": "Calle San Martin S/N C. Poblado Navarro",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Extracción (piezas 51, 61, 82, 73, 74): S/ 250\nCuración (piezas 55, 54, 85, 84, 75, 36): S/ 300",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Extracción",
+          "piezas": "51, 61, 82, 73, 74",
+          "presupuesto": "S/ 250"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "55, 54, 85, 84, 75, 36",
+          "presupuesto": "S/ 300"
+        }
+      ],
+      "total": 550.0,
+      "total_texto": "S/ 550",
+      "notas": "Cita 10:00 am. Emergencia: Nely Napuchi Tabano 44186580. Enfermedad actual: N. Dice 'Terminado' abajo. Ambos tratamientos con check.",
+      "datos_por_verificar": "Edad (6 o 5)",
+      "fotos": [
+        "11.20.52.jpeg"
+      ]
+    },
+    {
+      "n": 217,
+      "historia_clinica": "",
+      "fecha": "",
+      "nombre": "Axel Javier R. Pinchi",
+      "edad": "5",
+      "sexo": "Masculino",
+      "fecha_nacimiento": "01/12/2020",
+      "dni": "92649912",
+      "telefono": "9",
+      "ocupacion": "",
+      "direccion": "",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Curación: S/ 250\nCuración vestibular: S/ 200\nExtracción (5) (piezas 64): S/ 250 (- 50 pz 64)",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "",
+          "presupuesto": "S/ 250"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación vestibular",
+          "piezas": "",
+          "presupuesto": "S/ 200"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Extracción (5)",
+          "piezas": "64",
+          "presupuesto": "S/ 250 (- 50 pz 64)"
+        }
+      ],
+      "total": 650.0,
+      "total_texto": "S/ 700 - 650",
+      "notas": "Cita 10:00 am. Emergencia: Ailen Pinchi Usuñahua 41892833. Sin fecha. Total 700 reducido a 650 (50 por la pieza 64).",
+      "datos_por_verificar": "Nombre (Axel/Avel), apellido paterno ilegible; teléfono incompleto (solo '9')",
+      "fotos": [
+        "11.20.53 (1).jpeg"
+      ]
+    },
+    {
+      "n": 218,
+      "historia_clinica": "",
+      "fecha": "09-NOV-2026",
+      "nombre": "Katerine Zegarra Ruiz",
+      "edad": "",
+      "sexo": "F",
+      "fecha_nacimiento": "",
+      "dni": "70?53222",
+      "telefono": "947070948",
+      "ocupacion": "",
+      "direccion": "",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Endodoncia (piezas 13): S/ 400\nCorona: S/ 400\nPerno: S/ 100",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Endodoncia",
+          "piezas": "13",
+          "presupuesto": "S/ 400"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Corona",
+          "piezas": "",
+          "presupuesto": "S/ 400"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Perno",
+          "piezas": "",
+          "presupuesto": "S/ 100"
+        }
+      ],
+      "total": 900.0,
+      "total_texto": "S/ 900",
+      "notas": "Enfermedad actual: N. Mismo DNI y teléfono que la ficha sin nombre del 06/11/2026 (11.20.53), probablemente una visita anterior.",
+      "datos_por_verificar": "Tercer dígito del DNI",
+      "fotos": [
+        "11.20.53 (3).jpeg",
+        "11.20.53 (4).jpeg"
+      ]
+    },
+    {
+      "n": 219,
+      "historia_clinica": "",
+      "fecha": "06/11/2026",
+      "nombre": "",
+      "edad": "",
+      "sexo": "",
+      "fecha_nacimiento": "",
+      "dni": "70353222",
+      "telefono": "947070948",
+      "ocupacion": "Independiente",
+      "direccion": "",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "",
+      "diagnosticos": [],
+      "total": null,
+      "total_texto": "",
+      "notas": "Sin nombre; DNI y teléfono coinciden con Katerine Zegarra Ruiz (posible visita anterior). Cita 6:00. Sin diagnóstico.",
+      "datos_por_verificar": "DNI escrito como 7033222 con un 5 superpuesto, leído como 70353222",
+      "fotos": [
+        "11.20.53.jpeg"
+      ]
+    },
+    {
+      "n": 220,
+      "historia_clinica": "",
+      "fecha": "09-NOV-2026",
+      "nombre": "Tercero Eleodoro Shapiama Saavedra",
+      "edad": "55",
+      "sexo": "",
+      "fecha_nacimiento": "06/02/1971",
+      "dni": "01129?78",
+      "telefono": "963995142",
+      "ocupacion": "Independiente",
+      "direccion": "Jr. Santa Rosa - Banda de Shilcayo",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Puente (7) (piezas 24-13)\nTratamiento gingival\nCuración: S/\nPuente de 6: S/ 2400\nImplante",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Puente (7)",
+          "piezas": "24-13",
+          "presupuesto": ""
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Tratamiento gingival",
+          "piezas": "",
+          "presupuesto": ""
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "",
+          "presupuesto": "S/"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Puente de 6",
+          "piezas": "",
+          "presupuesto": "S/ 2400"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Implante",
+          "piezas": "",
+          "presupuesto": ""
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Enfermedad actual: diabetes. En el odontograma: 'Atendido por Gilmer' con montos 1,200 y 1,200.",
+      "datos_por_verificar": "Apellido materno (Saavedra?); 6to dígito del DNI sobrescrito",
+      "fotos": [
+        "11.20.54 (1).jpeg"
+      ]
+    },
+    {
+      "n": 221,
+      "historia_clinica": "",
+      "fecha": "09-NOV-2026",
+      "nombre": "Laura Pacaya Tamani",
+      "edad": "",
+      "sexo": "Femenino",
+      "fecha_nacimiento": "",
+      "dni": "4602711?",
+      "telefono": "992900101",
+      "ocupacion": "Independiente",
+      "direccion": "Jr. Cahuide 762 - Banda de Shilcayo",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Curación\nReconstrucción (piezas 47): S/ 100\nPasta provisional",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "",
+          "presupuesto": ""
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Reconstrucción",
+          "piezas": "47",
+          "presupuesto": "S/ 100"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Pasta provisional",
+          "piezas": "",
+          "presupuesto": ""
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Precio S/ 100 encerrado.",
+      "datos_por_verificar": "Últimos dígitos del DNI (46027110?); 8vo dígito del teléfono",
+      "fotos": [
+        "11.20.54 (2).jpeg"
+      ]
+    },
+    {
+      "n": 222,
+      "historia_clinica": "",
+      "fecha": "09-NOV-2026",
+      "nombre": "Maricruz Reategui Pezo",
+      "edad": "32",
+      "sexo": "F",
+      "fecha_nacimiento": "23/12/1993",
+      "dni": "70411460",
+      "telefono": "934769712",
+      "ocupacion": "Niñera",
+      "direccion": "Jr. Ramon Castilla - Banda de Shilcayo",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Limpieza + F: S/ 100 + 50\nCuración (piezas 18, 17, 16, 15, 14, 27, 26, 25, 24, 48, 45, 44, 34, 35, 36): S/ 750\nExtracción (2): S/ 100\nTerceras molares (3ros juicio) (2): S/ 500\nPuente porcelana: S/ 400",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Limpieza + F",
+          "piezas": "",
+          "presupuesto": "S/ 100 + 50"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curación",
+          "piezas": "18, 17, 16, 15, 14, 27, 26, 25, 24, 48, 45, 44, 34, 35, 36",
+          "presupuesto": "S/ 750"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Extracción (2)",
+          "piezas": "",
+          "presupuesto": "S/ 100"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Terceras molares (3ros juicio) (2)",
+          "piezas": "",
+          "presupuesto": "S/ 500"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Puente porcelana",
+          "piezas": "",
+          "presupuesto": "S/ 400"
+        }
+      ],
+      "total": 1900.0,
+      "total_texto": "S/ 1900",
+      "notas": "Cita sábado 7:00 pm. Enfermedad actual: N. Tratamientos numerados del 1 al 4 por prioridad.",
+      "datos_por_verificar": "Apellido materno (Pezo?); precio de extracción sobrescrito (100 cuadra con el total)",
+      "fotos": [
+        "11.20.54 (3).jpeg"
+      ]
+    },
+    {
+      "n": 223,
+      "historia_clinica": "",
+      "fecha": "09-NOV-2026",
+      "nombre": "Daniel Ponce Zota",
+      "edad": "",
+      "sexo": "",
+      "fecha_nacimiento": "",
+      "dni": "08590374",
+      "telefono": "948121688",
+      "ocupacion": "Independiente",
+      "direccion": "",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Extracción (9): S/ 450\nImplante superior (6): S/ 18,000\nImplante inferior (6): S/ 18,000\nPrótesis superior: S/ 3,000\nPrótesis inferior: S/ 3,000",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Extracción (9)",
+          "piezas": "",
+          "presupuesto": "S/ 450"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Implante superior (6)",
+          "piezas": "",
+          "presupuesto": "S/ 18,000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Implante inferior (6)",
+          "piezas": "",
+          "presupuesto": "S/ 18,000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Prótesis superior",
+          "piezas": "",
+          "presupuesto": "S/ 3,000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Prótesis inferior",
+          "piezas": "",
+          "presupuesto": "S/ 3,000"
+        }
+      ],
+      "total": 33960.0,
+      "total_texto": "S/ 42,480 - 20% = S/ 33,960",
+      "notas": "Contacto: Martha Davila Lozano. Total escrito 42,480 con 20% de descuento = 33,960 (los montos suman 42,450).",
+      "datos_por_verificar": "Apellido paterno (Ponce?); teléfono en rojo, posiblemente tachado",
+      "fotos": [
+        "11.20.54.jpeg",
+        "11.20.55.jpeg"
+      ]
+    },
+    {
+      "n": 224,
+      "historia_clinica": "",
+      "fecha": "10-NOV-2026",
+      "nombre": "Maria Ester Leon Peralta",
+      "edad": "",
+      "sexo": "",
+      "fecha_nacimiento": "",
+      "dni": "46773823",
+      "telefono": "969934877",
+      "ocupacion": "Independiente",
+      "direccion": "Jr. San Antonio Mz A Lt 3 Miguel Ruiz Garcia",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "",
+      "diagnosticos": [],
+      "total": null,
+      "total_texto": "",
+      "notas": "Cita 3:30 pm. Enfermedad actual: N. Sin diagnóstico ni tratamiento.",
+      "datos_por_verificar": "Apellido materno (Peralta?)",
+      "fotos": [
+        "11.20.55 (1).jpeg"
+      ]
+    },
+    {
+      "n": 225,
+      "historia_clinica": "",
+      "fecha": "11-NOV-2026",
+      "nombre": "Gustavo Pastor Cateriano",
+      "edad": "",
+      "sexo": "Masculino",
+      "fecha_nacimiento": "",
+      "dni": "01135039",
+      "telefono": "975417749",
+      "ocupacion": "",
+      "direccion": "PSJ.",
+      "motivo_consulta": "Consulta Odontológica",
+      "descripcion": "Reconstrucción (piezas 21): S/ 80",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Reconstrucción",
+          "piezas": "21",
+          "presupuesto": "S/ 80"
+        }
+      ],
+      "total": null,
+      "total_texto": "",
+      "notas": "Cita 6:00 pm.",
+      "datos_por_verificar": "Último dígito del teléfono (5/9); dirección incompleta",
+      "fotos": [
+        "11.20.55 (2).jpeg"
+      ]
+    },
+    {
+      "n": 226,
+      "historia_clinica": "",
+      "fecha": "12-NOV-2026",
+      "nombre": "Jorge Leonidas Alvarado Bazan",
+      "edad": "50",
+      "sexo": "M",
+      "fecha_nacimiento": "",
+      "dni": "01157763",
+      "telefono": "928906536",
+      "ocupacion": "",
+      "direccion": "",
+      "motivo_consulta": "",
+      "descripcion": "Limpieza + F: S/ 100\nCuraciones (9): S/ 450\nPuentes sup. izq.: S/ 1,200\nPuentes sup. der.: S/ 1,200\nPuente inf. der.: S/ 1,200\nEndodoncia (piezas 43, 42, 41, 31, 32, 33): S/ 2,000\nCoronas (piezas 43, 42, 41, 31, 32, 33): S/ 2,100\nPerno: S/ 600\nBlanqueamiento: S/ 200",
+      "diagnosticos": [
+        {
+          "diagnostico": "",
+          "tratamiento": "Limpieza + F",
+          "piezas": "",
+          "presupuesto": "S/ 100"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Curaciones (9)",
+          "piezas": "",
+          "presupuesto": "S/ 450"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Puentes sup. izq.",
+          "piezas": "",
+          "presupuesto": "S/ 1,200"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Puentes sup. der.",
+          "piezas": "",
+          "presupuesto": "S/ 1,200"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Puente inf. der.",
+          "piezas": "",
+          "presupuesto": "S/ 1,200"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Endodoncia",
+          "piezas": "43, 42, 41, 31, 32, 33",
+          "presupuesto": "S/ 2,000"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Coronas",
+          "piezas": "43, 42, 41, 31, 32, 33",
+          "presupuesto": "S/ 2,100"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Perno",
+          "piezas": "",
+          "presupuesto": "S/ 600"
+        },
+        {
+          "diagnostico": "",
+          "tratamiento": "Blanqueamiento",
+          "piezas": "",
+          "presupuesto": "S/ 200"
+        }
+      ],
+      "total": 9000.0,
+      "total_texto": "S/ 9,000",
+      "notas": "Cita sábado 3:30 pm. Tratamientos numerados del 1 al 8 por prioridad. Nota al costado: 'total S/ 9,000'; el total de abajo está tachado e ilegible. Los montos suman 9,050.",
+      "datos_por_verificar": "Apellido materno (Bazan?); total de abajo ilegible",
+      "fotos": [
+        "11.20.55 (3).jpeg"
+      ]
+    }
+  ],
+  "listados_impresos": [
+    {
+      "foto": "11.06.50.jpeg",
+      "contenido": "Listado impreso 'Lista de Pacientes', agosto 2026 (total 63), página 1: del 31/07 (Andrea Sinarahua Sangama) al 16/08 (Agueda Jumachi Vilca). Impreso 12/11/2026."
+    },
+    {
+      "foto": "11.06.50 (1).jpeg",
+      "contenido": "Listado impreso, agosto 2026, página 2: del 16/08 (Jhorsh Jhunior Cipriano Cordova) al 30/08 (Andrea Amasifuen Isuiza)."
+    },
+    {
+      "foto": "11.06.51.jpeg",
+      "contenido": "Listado impreso, octubre 2026 (total 41), página 1: del 30/09 (Olga Dayanna Hernandez Carranza) al 22/10 (Rosa Elvira Hurtado Gonzales). Impreso 12/11/2026."
+    },
+    {
+      "foto": "11.06.51 (1).jpeg",
+      "contenido": "Listado impreso, octubre 2026, página 2: del 23/10 (Ruth Karina Mendoza Saboya) al 30/10 (Barukc Jhoel Cenepo Inuma). Fotos repetidas: 11.06.51 (1) y 11.06.51 (2)."
+    },
+    {
+      "foto": "11.06.53 (1).jpeg",
+      "contenido": "Listado impreso, septiembre 2026 (total 49), página 1: del 31/08 (Luz Estela Sajami Cumapa) al 15/09 (Dulce Zuleyca Amira Arevalo Sanchez). Impreso 12/11/2026. Fotos repetidas: 11.06.53 (1) y 11.06.53."
+    },
+    {
+      "foto": "11.06.53 (2).jpeg",
+      "contenido": "Listado impreso, septiembre 2026, página 2: del 15/09 (Lary Dahua Machoa) al 29/09 (Siris Juleysi Tapullima Mozombite)."
+    }
+  ]
+}
