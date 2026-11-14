@@ -149,15 +149,6 @@ export function isCallDue(nextCallOn: string | null | undefined, today: string) 
   return Boolean(nextCallOn) && (nextCallOn as string) <= today;
 }
 
-/** Exact local datetime for tooltips and history, e.g. "14/11/2026, 10:32". */
-export function formatCallDateTime(iso: string) {
-  return new Intl.DateTimeFormat("es-PE", {
-    timeZone: TIME_ZONE,
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(new Date(iso));
-}
-
 /** A YYYY-MM-DD day as "14/11/2026". */
 export function formatDay(day: string) {
   const [y, m, d] = day.split("-");
@@ -183,4 +174,27 @@ export function groupCallsByMonth<T extends { created_at: string }>(calls: T[]) 
     group.calls.push(call);
   }
   return groups;
+}
+
+/**
+ * When a call happened, the way staff say it: "Hoy · 2:34 p. m.", "Ayer · …",
+ * "Lunes 9 de noviembre · 9:05 a. m." (plus the year when it is not the current one).
+ */
+export function formatCallWhen(iso: string, today: string = limaToday()) {
+  const date = new Date(iso);
+  const day = limaToday(date);
+  const time = new Intl.DateTimeFormat("es-PE", { timeZone: TIME_ZONE, hour: "numeric", minute: "2-digit" }).format(date);
+  if (day === today) return `Hoy · ${time}`;
+  if (day === addDays(today, -1)) return `Ayer · ${time}`;
+  const sameYear = day.slice(0, 4) === today.slice(0, 4);
+  const label = new Intl.DateTimeFormat("es-PE", {
+    timeZone: TIME_ZONE,
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    ...(sameYear ? {} : { year: "numeric" }),
+  })
+    .format(date)
+    .replace(",", "");
+  return `${label.charAt(0).toUpperCase()}${label.slice(1)} · ${time}`;
 }

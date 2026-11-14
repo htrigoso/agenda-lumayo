@@ -6,7 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import AlarmIcon from "@mui/icons-material/AlarmOutlined";
 import InfoIcon from "@mui/icons-material/Info";
-import { type CallSummary, formatCallDateTime, formatDay, isCallDue, outcomeLabel, outcomeOption, relativeDay } from "@/lib/calls";
+import { type CallSummary, formatCallWhen, formatDay, isCallDue, outcomeLabel, outcomeOption, relativeDay } from "@/lib/calls";
 
 type Props = {
   call: Partial<CallSummary>;
@@ -47,7 +47,7 @@ export function LastCall({ call, staffNames, today, maxWidth }: Props) {
     <>
       {label}
       <br />
-      {formatCallDateTime(call.last_call_at)}
+      {formatCallWhen(call.last_call_at, today)}
       {who ? ` · ${who}` : ""}
     </>
   );

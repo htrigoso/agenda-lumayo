@@ -33,7 +33,7 @@ export function PatientTabs({ client, calls, today, isAdmin, initialTab }: Props
   const lastCaller: Record<string, string> =
     client.last_call_by && calls[0]?.staff_name ? { [client.last_call_by]: calls[0].staff_name } : {};
   const callsLabel = calls.length > 0 ? `Llamadas (${calls.length})` : "Llamadas";
-  const history = <CallHistory clientId={client.id} name={name} mobile={client.mobile} whatsapp={client.whatsapp} calls={calls} isAdmin={isAdmin} />;
+  const history = <CallHistory clientId={client.id} name={name} mobile={client.mobile} whatsapp={client.whatsapp} calls={calls} isAdmin={isAdmin} today={today} />;
   return (
     <Box>
       <Reveal y={10}>

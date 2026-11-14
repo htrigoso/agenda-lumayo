@@ -5,6 +5,7 @@ import {
   CALL_OUTCOME_GROUPS,
   outcomesByGroup,
   addDays,
+  formatCallWhen,
   groupCallsByMonth,
   isCallDue,
   limaToday,
@@ -146,4 +147,13 @@ test("groupCallsByMonth groups by Lima month, newest month and call first", () =
       ["Octubre 2026", ["d", "a"]],
     ],
   );
+});
+
+test("formatCallWhen reads like a person would say it (Lima time)", () => {
+  // 14 Nov 2026 is a Saturday; 19:34 UTC = 2:34 p. m. in Lima.
+  assert.match(formatCallWhen("2026-11-14T19:34:00Z", TODAY), /^Hoy · 2:34\sp\.\sm\.$/);
+  assert.match(formatCallWhen("2026-11-13T19:34:00Z", TODAY), /^Ayer · 2:34\sp\.\sm\.$/);
+  assert.match(formatCallWhen("2026-11-09T14:05:00Z", TODAY), /^Lunes 9 de noviembre · 9:05\sa\.\sm\.$/);
+  // Another year shows the year too.
+  assert.match(formatCallWhen("2025-12-31T15:00:00Z", TODAY), /^Miércoles 31 de diciembre de 2025 · 10:00\sa\.\sm\.$/);
 });

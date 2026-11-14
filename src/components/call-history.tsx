@@ -22,7 +22,7 @@ import EventIcon from "@mui/icons-material/EventOutlined";
 import PersonIcon from "@mui/icons-material/PersonOutlined";
 import { type CallLog, deleteCall } from "@/app/(app)/clients/actions";
 import { CallLogDialog } from "@/components/call-log-dialog";
-import { formatCallDateTime, formatDay, groupCallsByMonth, outcomeLabel, outcomeOption } from "@/lib/calls";
+import { formatCallWhen, formatDay, groupCallsByMonth, outcomeLabel, outcomeOption } from "@/lib/calls";
 
 type Props = {
   clientId: string;
@@ -32,6 +32,8 @@ type Props = {
   calls: CallLog[];
   /** Only admins may delete history entries. */
   isAdmin: boolean;
+  /** Lima calendar day (YYYY-MM-DD), computed on the server. */
+  today: string;
 };
 
 /** Trash button with a confirmation dialog for one history entry. */
@@ -73,7 +75,7 @@ function DeleteCallButton({ call }: { call: CallLog }) {
         <DialogContent>
           <Stack spacing={1.5}>
             <Typography variant="body2">
-              {outcomeLabel(call.outcome)} · {formatCallDateTime(call.created_at)}
+              {outcomeLabel(call.outcome)} · {formatCallWhen(call.created_at)}
               {call.staff_name && ` · ${call.staff_name}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -103,7 +105,7 @@ function DeleteCallButton({ call }: { call: CallLog }) {
 
 const RAIL = 24;
 
-function CallEntry({ call, isAdmin }: { call: CallLog; isAdmin: boolean }) {
+function CallEntry({ call, isAdmin, today }: { call: CallLog; isAdmin: boolean; today: string }) {
   const color = outcomeOption(call.outcome)?.color ?? "default";
   return (
     <Box sx={{ position: "relative", pl: `${RAIL + 8}px`, pb: 2 }}>
@@ -124,8 +126,8 @@ function CallEntry({ call, isAdmin }: { call: CallLog; isAdmin: boolean }) {
       />
       <Stack direction="row" spacing={1} sx={{ alignItems: "center", flexWrap: "wrap", rowGap: 0.75 }}>
         <Chip size="small" color={outcomeOption(call.outcome)?.color ?? "default"} label={outcomeLabel(call.outcome)} sx={{ fontWeight: 600 }} />
-        <Typography variant="body2" color="text.secondary">
-          {formatCallDateTime(call.created_at)}
+        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+          {formatCallWhen(call.created_at, today)}
         </Typography>
         {call.staff_name && (
           <Chip
@@ -150,7 +152,7 @@ function CallEntry({ call, isAdmin }: { call: CallLog; isAdmin: boolean }) {
 }
 
 /** "Llamadas" tab of the patient file: a monthly timeline, newest call first, plus a button to log a new one. */
-export function CallHistory({ clientId, name, mobile, whatsapp, calls, isAdmin }: Props) {
+export function CallHistory({ clientId, name, mobile, whatsapp, calls, isAdmin, today }: Props) {
   return (
     <Stack spacing={2}>
       <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
@@ -190,7 +192,7 @@ export function CallHistory({ clientId, name, mobile, whatsapp, calls, isAdmin }
                 }}
               >
                 {month.calls.map((c) => (
-                  <CallEntry key={c.id} call={c} isAdmin={isAdmin} />
+                  <CallEntry key={c.id} call={c} isAdmin={isAdmin} today={today} />
                 ))}
               </Box>
             </Box>
