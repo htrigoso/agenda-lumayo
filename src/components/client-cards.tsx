@@ -17,6 +17,7 @@ import { whatsappUrl } from "@/lib/phone";
 import { NewChip } from "@/components/new-chip";
 import { NEW_TAG } from "@/lib/clients-query";
 import { ClientCardMenu } from "@/components/client-card-menu";
+import { type ListFilters, hasFilters } from "@/lib/list-filters";
 import { shortName } from "@/lib/names";
 import { LastCallIcon } from "@/components/last-call";
 
@@ -28,10 +29,7 @@ type Props = {
   page: number;
   /** Patients per page (150 on phones, 250 on desktop). */
   pageSize: number;
-  term: string;
-  onlyPriority: boolean;
-  onlyNew: boolean;
-  onlyDue: boolean;
+  filters: ListFilters;
   /** staff user_id → full name, for "who called". */
   staffNames: Record<string, string>;
   /** Lima calendar day (YYYY-MM-DD). */
@@ -40,7 +38,7 @@ type Props = {
   isAdmin: boolean;
 };
 
-export function ClientCards({ initial, total, page, pageSize, term, onlyPriority, onlyNew, onlyDue, staffNames, today, isAdmin }: Props) {
+export function ClientCards({ initial, total, page, pageSize, filters, staffNames, today, isAdmin }: Props) {
   const [items, setItems] = useState(initial);
   const [lastPage, setLastPage] = useState(page);
   const [removed, setRemoved] = useState(0);
@@ -50,7 +48,7 @@ export function ClientCards({ initial, total, page, pageSize, term, onlyPriority
 
   function loadMore() {
     startTransition(async () => {
-      const next = await loadMoreClients(lastPage + 1, term, onlyPriority, onlyNew, onlyDue, pageSize);
+      const next = await loadMoreClients(lastPage + 1, filters, pageSize);
       setItems((prev) => [...prev, ...next.filter((n) => !prev.some((p) => p.id === n.id))]);
       setLastPage((p) => p + 1);
     });
@@ -59,7 +57,7 @@ export function ClientCards({ initial, total, page, pageSize, term, onlyPriority
   if (items.length === 0) {
     return (
       <Paper sx={{ p: 4, textAlign: "center", color: "text.secondary" }}>
-        {term || onlyPriority || onlyNew || onlyDue ? "Ningún paciente coincide con tu búsqueda." : "Aún no hay pacientes. ¡Agrega el primero!"}
+        {hasFilters(filters) ? "Ningún paciente coincide con tu búsqueda." : "Aún no hay pacientes. ¡Agrega el primero!"}
       </Paper>
     );
   }

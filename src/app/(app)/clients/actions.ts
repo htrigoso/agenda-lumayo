@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { Client } from "@/components/client-form";
 import { type CallInput, type CallSummary, validateCall } from "@/lib/calls";
-import { NEW_TAG, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
+import { NEW_TAG, fetchClientsPage } from "@/lib/clients-query";
+import { type ListFilters, parseListFilters } from "@/lib/list-filters";
 import { safePageSize } from "@/lib/page-size";
 import { assertAdmin } from "@/lib/staff";
 import { createClient } from "@/lib/supabase/server";
@@ -85,23 +86,17 @@ export async function markContactSaved(id: string) {
   return data as string;
 }
 
-export async function loadMoreClients(
-  page: number,
-  q: string,
-  onlyPriority: boolean,
-  onlyNew: boolean,
-  onlyDue: boolean,
-  pageSize: number,
-) {
+export async function loadMoreClients(page: number, filters: ListFilters, pageSize: number) {
   const supabase = await createClient();
-  const { data, error } = await fetchClientsPage(supabase, {
-    page,
-    term: sanitizeTerm(q),
-    onlyPriority,
-    onlyNew,
-    onlyDue,
-    pageSize: safePageSize(pageSize),
+  // Filters come from the browser: re-validate them like the page does with the URL.
+  const safe = parseListFilters({
+    q: filters.term,
+    potential: filters.onlyPriority ? "1" : undefined,
+    outcome: filters.outcomes.join(","),
+    from: filters.callFrom ?? undefined,
+    to: filters.callTo ?? undefined,
   });
+  const { data, error } = await fetchClientsPage(supabase, { page, filters: safe, pageSize: safePageSize(pageSize) });
   if (error) throw new Error(error.message);
   return (data ?? []) as Client[];
 }

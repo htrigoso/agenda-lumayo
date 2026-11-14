@@ -44,7 +44,11 @@ export function LastCall({ call, staffNames, today }: Props) {
     return due ? <CallDueChip nextCallOn={call.next_call_on!} today={today} /> : <Typography color="text.secondary">—</Typography>;
   }
   const who = call.last_call_by ? staffNames[call.last_call_by] : undefined;
-  const label = `${outcomeLabel(call.last_call_outcome)} · ${relativeDay(call.last_call_at, today)}`;
+  // "Volver a llamar el 15/11" shows the follow-up date; other outcomes say when the call happened.
+  const label =
+    call.last_call_outcome === "call_back" && call.next_call_on
+      ? `Volver a llamar el ${formatDay(call.next_call_on).slice(0, 5)}`
+      : `${outcomeLabel(call.last_call_outcome)} · llamó ${relativeDay(call.last_call_at, today)}`;
   const tooltip = (
     <>
       {label}
@@ -134,6 +138,11 @@ export function LastCallIcon({ call, staffNames, today }: Props) {
                 </Typography>
               )}
             </>
+          )}
+          {call.next_call_on && (
+            <Typography variant="body2">
+              Volver a llamar el <strong>{formatDay(call.next_call_on)}</strong>
+            </Typography>
           )}
           {due && <CallDueChip nextCallOn={call.next_call_on!} today={today} />}
         </Stack>

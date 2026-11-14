@@ -198,3 +198,29 @@ export function formatCallWhen(iso: string, today: string = limaToday()) {
     .replace(",", "");
   return `${label.charAt(0).toUpperCase()}${label.slice(1)} · ${time}`;
 }
+
+/** URL value "a,b" as known outcome keys (unknown and repeated keys dropped). */
+export function parseOutcomes(value: unknown): string[] {
+  if (typeof value !== "string") return [];
+  const keys = value.split(",").filter((k) => outcomeOption(k));
+  return [...new Set(keys)];
+}
+
+/** A URL value as a real calendar day (YYYY-MM-DD), or null. */
+export function parseDay(value: unknown): string | null {
+  return typeof value === "string" && isValidDay(value) ? value : null;
+}
+
+/** Start of a Lima calendar day as a UTC instant (Lima is UTC-5, no daylight saving). */
+function limaDayStart(day: string) {
+  return new Date(`${day}T00:00:00-05:00`).toISOString();
+}
+
+/** Timestamp bounds for "last call between `from` and `to`" (both Lima days, inclusive). */
+export function callDateRange(from: string | null, to: string | null): { gte?: string; lt?: string } {
+  const [start, end] = from && to && from > to ? [to, from] : [from, to];
+  return {
+    ...(start && { gte: limaDayStart(start) }),
+    ...(end && { lt: limaDayStart(addDays(end, 1)) }),
+  };
+}

@@ -5,6 +5,9 @@ import {
   CALL_OUTCOME_GROUPS,
   outcomesByGroup,
   addDays,
+  parseOutcomes,
+  callDateRange,
+  parseDay,
   formatCallWhen,
   groupCallsByMonth,
   isCallDue,
@@ -156,4 +159,35 @@ test("formatCallWhen reads like a person would say it (Lima time)", () => {
   assert.match(formatCallWhen("2026-11-09T14:05:00Z", TODAY), /^Lunes 9 de noviembre · 9:05\sa\.\sm\.$/);
   // Another year shows the year too.
   assert.match(formatCallWhen("2025-12-31T15:00:00Z", TODAY), /^Miércoles 31 de diciembre de 2025 · 10:00\sa\.\sm\.$/);
+});
+
+test("parseOutcomes reads a comma list of outcome keys, dropping unknown ones", () => {
+  assert.deepEqual(parseOutcomes("no_answer,voicemail"), ["no_answer", "voicemail"]);
+  assert.deepEqual(parseOutcomes("no_answer,bogus,no_answer"), ["no_answer"]);
+  assert.deepEqual(parseOutcomes(""), []);
+  assert.deepEqual(parseOutcomes(undefined), []);
+  assert.deepEqual(parseOutcomes(["no_answer"]), []);
+});
+
+test("parseDay accepts only real YYYY-MM-DD days", () => {
+  assert.equal(parseDay("2026-11-01"), "2026-11-01");
+  assert.equal(parseDay("2026-02-30"), null);
+  assert.equal(parseDay("01/11/2026"), null);
+  assert.equal(parseDay(undefined), null);
+  assert.equal(parseDay(["2026-11-01"]), null);
+});
+
+test("callDateRange turns Lima days into an inclusive [from, to] timestamp range", () => {
+  // Lima is UTC-5 all year: the day starts at 05:00 UTC.
+  assert.deepEqual(callDateRange("2026-11-01", "2026-11-14"), {
+    gte: "2026-11-01T05:00:00.000Z",
+    lt: "2026-11-15T05:00:00.000Z",
+  });
+  assert.deepEqual(callDateRange("2026-11-01", null), { gte: "2026-11-01T05:00:00.000Z" });
+  assert.deepEqual(callDateRange(null, "2026-11-14"), { lt: "2026-11-15T05:00:00.000Z" });
+  assert.deepEqual(callDateRange(null, null), {});
+});
+
+test("callDateRange swaps a reversed range", () => {
+  assert.deepEqual(callDateRange("2026-11-14", "2026-11-01"), callDateRange("2026-11-01", "2026-11-14"));
 });
