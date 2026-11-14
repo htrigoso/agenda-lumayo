@@ -4,29 +4,21 @@ import { useState, useTransition } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import EditIcon from "@mui/icons-material/EditOutlined";
-import EmailIcon from "@mui/icons-material/EmailOutlined";
-import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { loadMoreClients } from "@/app/(app)/clients/actions";
-import { PAGE_SIZE } from "@/lib/clients-query";
 import type { Client } from "@/components/client-form";
 import { ClientAvatar } from "@/components/client-avatar";
 import { AnimatePresence, LiftCard, Stagger } from "@/components/motion";
-import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
-import { formatRecordNumber } from "@/lib/record";
-import { PriorityChip } from "@/components/priority-chip";
 import { NewChip } from "@/components/new-chip";
 import { NEW_TAG } from "@/lib/clients-query";
-import { SaveContactButton } from "@/components/save-contact-button";
-import { LastCall } from "@/components/last-call";
+import { ClientCardMenu } from "@/components/client-card-menu";
+import { shortName } from "@/lib/names";
+import { LastCallIcon } from "@/components/last-call";
 
 type Props = {
   initial: Client[];
@@ -34,6 +26,8 @@ type Props = {
   total: number;
   /** Page number that `initial` was loaded from. */
   page: number;
+  /** Patients per page (150 on phones, 250 on desktop). */
+  pageSize: number;
   term: string;
   onlyPriority: boolean;
   onlyNew: boolean;
@@ -46,17 +40,17 @@ type Props = {
   isAdmin: boolean;
 };
 
-export function ClientCards({ initial, total, page, term, onlyPriority, onlyNew, onlyDue, staffNames, today, isAdmin }: Props) {
+export function ClientCards({ initial, total, page, pageSize, term, onlyPriority, onlyNew, onlyDue, staffNames, today, isAdmin }: Props) {
   const [items, setItems] = useState(initial);
   const [lastPage, setLastPage] = useState(page);
   const [removed, setRemoved] = useState(0);
   const [pending, startTransition] = useTransition();
 
-  const remaining = total - removed - items.length - (page - 1) * PAGE_SIZE > 0;
+  const remaining = total - removed - items.length - (page - 1) * pageSize > 0;
 
   function loadMore() {
     startTransition(async () => {
-      const next = await loadMoreClients(lastPage + 1, term, onlyPriority, onlyNew, onlyDue);
+      const next = await loadMoreClients(lastPage + 1, term, onlyPriority, onlyNew, onlyDue, pageSize);
       setItems((prev) => [...prev, ...next.filter((n) => !prev.some((p) => p.id === n.id))]);
       setLastPage((p) => p + 1);
     });
@@ -71,96 +65,87 @@ export function ClientCards({ initial, total, page, term, onlyPriority, onlyNew,
   }
 
   return (
-    <Stagger spacing={1.5}>
+    // As many 250px+ columns as fit: 1 on phones, 4 with the sidebar expanded, 5 when it is collapsed.
+    <Stagger
+      sx={{
+        display: "grid",
+        gap: 1.25,
+        gridTemplateColumns: "repeat(auto-fill, minmax(min(250px, 100%), 1fr))",
+        // Every card in a row stretches to the same height.
+        alignItems: "stretch",
+        // Footer (count and "Ver más") spans the whole row.
+        "& > .cards-footer": { gridColumn: "1 / -1" },
+      }}
+    >
       <AnimatePresence initial={false}>
-      {items.map((c) => (
-        <LiftCard key={c.id} sx={{ p: 2, ...(c.is_priority && { borderLeft: 4, borderColor: "warning.main" }) }}>
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
-            <ClientAvatar id={c.id} firstName={c.first_name} lastName={c.last_name} size={40} />
+      {items.map((c) => {
+        const chips = c.tags?.includes(NEW_TAG) && <NewChip />;
+        return (
+        <LiftCard
+          key={c.id}
+          sx={{
+            px: 1.5,
+            py: 1.25,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            ...(c.is_priority && { borderLeft: 4, borderColor: "warning.main" }),
+          }}
+        >
+          <Stack direction="row" spacing={1.25} sx={{ alignItems: "flex-start" }}>
+            <ClientAvatar id={c.id} firstName={c.first_name} lastName={c.last_name} size={32} />
             <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-              <Typography sx={{ fontWeight: 600, overflowWrap: "anywhere" }}>
-                {c.first_name} {c.last_name}
+              <Typography variant="body2" title={`${c.first_name} ${c.last_name}`} sx={{ fontWeight: 600, lineHeight: 1.3, overflowWrap: "anywhere" }}>
+                {shortName(c.first_name, c.last_name)}
               </Typography>
-              {c.record_number !== undefined && (
-                <Typography variant="caption" color="text.secondary">
-                  H.C. {formatRecordNumber(c.record_number)}
-                </Typography>
-              )}
-              {(c.last_call_at || c.next_call_on) && (
-                <Box sx={{ mt: 0.5 }}>
-                  <LastCall call={c} staffNames={staffNames} today={today} />
-                </Box>
-              )}
             </Box>
-            <Tooltip title="Llamadas">
-              <IconButton href={`/clients/${c.id}?tab=llamadas`} aria-label="Llamadas">
-                <PhoneIcon />
-              </IconButton>
-            </Tooltip>
-            {isAdmin && <SaveContactButton id={c.id} firstName={c.first_name} lastName={c.last_name} mobile={c.mobile} whatsapp={c.whatsapp} savedAt={c.contact_saved_at} />}
-            {isAdmin && (
-              <>
-                <IconButton href={`/clients/${c.id}`} aria-label="Editar">
-                  <EditIcon />
-                </IconButton>
-                <DeleteClientButton
-                  id={c.id}
-                  name={`${c.first_name} ${c.last_name}`}
-                  onDeleted={() => {
-                    setItems((prev) => prev.filter((p) => p.id !== c.id));
-                    setRemoved((n) => n + 1);
-                  }}
-                />
-              </>
-            )}
+            {/* Top-right corner: the "⋮" menu (potential patients have the orange left border). */}
+            <Stack direction="row" spacing={0.25} sx={{ alignItems: "center", flexShrink: 0, mt: -0.5, mr: -1 }}>
+              <ClientCardMenu
+                client={c}
+                isAdmin={isAdmin}
+                onDeleted={() => {
+                  setItems((prev) => prev.filter((p) => p.id !== c.id));
+                  setRemoved((n) => n + 1);
+                }}
+              />
+            </Stack>
           </Stack>
-          {(c.mobile || c.whatsapp || c.email || c.description) && <Divider sx={{ my: 1.5 }} />}
+          {(c.whatsapp || c.last_call_at || c.next_call_on) && <Divider sx={{ my: 0.75 }} />}
           <Stack spacing={0.75}>
-            {c.mobile && (
+            {(c.whatsapp || c.last_call_at || c.next_call_on) && (
+              // WhatsApp number on the left, last-call marker (opens a popover) on the right.
               <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-                <PhoneIcon fontSize="small" color="action" />
-                <Link href={`tel:${c.mobile}`} underline="hover" color="inherit">
-                  {c.mobile}
-                </Link>
+                {c.whatsapp && (
+                  <>
+                    <WhatsAppIcon sx={{ color: "#25d366", fontSize: 16 }} />
+                    <Link href={whatsappUrl(c.whatsapp)} target="_blank" rel="noreferrer" underline="hover" variant="body2">
+                      {c.whatsapp}
+                    </Link>
+                  </>
+                )}
+                <Box sx={{ ml: "auto !important" }}>
+                  <LastCallIcon call={c} staffNames={staffNames} today={today} />
+                </Box>
               </Stack>
-            )}
-            {c.whatsapp && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-                <WhatsAppIcon fontSize="small" sx={{ color: "#25d366" }} />
-                <Link href={whatsappUrl(c.whatsapp)} target="_blank" rel="noreferrer" underline="hover">
-                  {c.whatsapp}
-                </Link>
-              </Stack>
-            )}
-            {c.email && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-                <EmailIcon fontSize="small" color="action" />
-                <Link href={`mailto:${c.email}`} underline="hover" color="inherit" sx={{ overflowWrap: "anywhere" }}>
-                  {c.email}
-                </Link>
-              </Stack>
-            )}
-            {c.description && (
-              <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
-                {c.description}
-              </Typography>
             )}
           </Stack>
-          {(c.is_priority || c.tags?.includes(NEW_TAG)) && (
-            <Stack direction="row" spacing={1} sx={{ justifyContent: "flex-end", mt: 1.5 }}>
-              {c.tags?.includes(NEW_TAG) && <NewChip />}
-              {c.is_priority && <PriorityChip />}
+          {chips && (
+            // Pinned to the bottom so cards in a row line up.
+            <Stack direction="row" sx={{ justifyContent: "flex-end", mt: "auto", pt: 0.75 }}>
+              {chips}
             </Stack>
           )}
         </LiftCard>
-      ))}
+        );
+      })}
       </AnimatePresence>
 
-      <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
+      <Typography className="cards-footer" variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
         Mostrando {items.length} de {total - removed}
       </Typography>
       {remaining && (
-        <Button variant="outlined" size="large" onClick={loadMore} disabled={pending}>
+        <Button className="cards-footer" variant="outlined" size="large" onClick={loadMore} disabled={pending}>
           {pending ? "Cargando..." : "Ver más"}
         </Button>
       )}

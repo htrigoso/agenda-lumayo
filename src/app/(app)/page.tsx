@@ -13,11 +13,13 @@ import type { Client } from "@/components/client-form";
 import { StatCard } from "@/components/stat-card";
 import { ClientsView } from "@/components/clients-view";
 import { SearchBox } from "@/components/search-box";
-import { PAGE_SIZE, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
+import { fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
+import { pageSizeFor } from "@/lib/page-size";
 import { limaToday } from "@/lib/calls";
 import { getCurrentStaff, getStaffNames } from "@/lib/staff";
 import { createClient } from "@/lib/supabase/server";
-import { connection } from "next/server";
+import { headers } from "next/headers";
+import { connection, userAgent } from "next/server";
 
 type Filters = { term: string; onlyPriority: boolean; onlyNew: boolean; onlyDue: boolean };
 
@@ -45,10 +47,13 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
   const rawPage = typeof pageParam === "string" ? Number.parseInt(pageParam, 10) : 1;
   const requestedPage = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1;
 
+  // 150 per page on phones, 250 on larger screens (decided on the server so the first render is right).
+  const pageSize = pageSizeFor(userAgent({ headers: await headers() }).device.type);
+
   const supabase = await createClient();
   const head = { count: "exact", head: true } as const;
   const [list, totalRes, whatsappRes, emailRes, staffNames, staff] = await Promise.all([
-    fetchClientsPage(supabase, { page: requestedPage, ...filters }),
+    fetchClientsPage(supabase, { page: requestedPage, term, onlyPriority, onlyNew, onlyDue, pageSize }),
     supabase.from("clients").select("id", head),
     supabase.from("clients").select("id", head).not("whatsapp", "is", null),
     supabase.from("clients").select("id", head).not("email", "is", null),
@@ -59,20 +64,18 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
 
   const clients = list.data as Client[] | null;
   const matches = list.count ?? 0;
-  const pageCount = Math.max(1, Math.ceil(matches / PAGE_SIZE));
+  const pageCount = Math.max(1, Math.ceil(matches / pageSize));
   // Out-of-range pages (e.g. after deleting the last item of a page) show the last page.
   if (requestedPage > pageCount && matches > 0) redirect(pageHref(pageCount, filters));
   const page = requestedPage;
-  const from = matches === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
-  const to = Math.min(page * PAGE_SIZE, matches);
 
   const total = totalRes.count ?? 0;
   const withWhatsapp = whatsappRes.count ?? 0;
   const withEmail = emailRes.count ?? 0;
 
   return (
-    <Stack spacing={3}>
-      <Grid container spacing={{ xs: 1, sm: 2 }}>
+    <Stack spacing={2}>
+      <Grid container spacing={{ xs: 1, sm: 1.5 }}>
         <Grid size={4}>
           <StatCard index={0} label="Total de pacientes" value={total} icon={<GroupIcon />} />
         </Grid>
@@ -97,9 +100,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
         clients={clients ?? []}
         matches={matches}
         page={page}
-        pageCount={pageCount}
-        from={from}
-        to={to}
+        pageSize={pageSize}
         term={term}
         onlyPriority={onlyPriority}
         onlyNew={onlyNew}
@@ -115,7 +116,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
 export default function HomePage({ searchParams }: PageProps<"/">) {
   return (
     <>
-      <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
+      <Typography variant="h5" sx={{ fontWeight: 700, mb: 1.5 }}>
         Pacientes
       </Typography>
       <Suspense fallback={<Skeleton variant="rounded" height={320} />}>

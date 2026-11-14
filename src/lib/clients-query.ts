@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { limaToday } from "@/lib/calls";
-
-export const PAGE_SIZE = 100;
+import { DESKTOP_PAGE_SIZE } from "@/lib/page-size";
 
 /** Tag marking a patient as new to the clinic. */
 export const NEW_TAG = "nuevo";
@@ -21,7 +20,8 @@ export async function fetchClientsPage(
     onlyPriority,
     onlyNew,
     onlyDue,
-  }: { page: number; term: string; onlyPriority: boolean; onlyNew: boolean; onlyDue: boolean },
+    pageSize = DESKTOP_PAGE_SIZE,
+  }: { page: number; term: string; onlyPriority: boolean; onlyNew: boolean; onlyDue: boolean; pageSize?: number },
 ) {
   let query = supabase.from("clients").select(COLUMNS, { count: "exact" });
   // "Por llamar": follow-ups due today or overdue (Lima calendar), oldest first.
@@ -39,5 +39,5 @@ export async function fetchClientsPage(
       `first_name.ilike.%${term}%,last_name.ilike.%${term}%,email.ilike.%${term}%,mobile.ilike.%${term}%${byNumber}`,
     );
   }
-  return query.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+  return query.range((page - 1) * pageSize, page * pageSize - 1);
 }

@@ -22,6 +22,8 @@ type Props = {
   mobile: string | null;
   whatsapp: string | null;
   savedAt?: string | null;
+  /** Custom trigger (e.g. a menu item) instead of the default icon button. */
+  renderTrigger?: (state: { open: () => void; saved: string | null; loading: boolean; disabled: boolean }) => React.ReactNode;
 };
 
 /** The user agent never changes, so there is nothing to subscribe to. */
@@ -38,7 +40,7 @@ function savedLabel(savedAt: string) {
  * Saves the patient on the phone. Android opens the native "new contact" form directly (intent);
  * other devices download the .vcf. A tap marks the patient as "contacto descargado".
  */
-export function SaveContactButton({ id, firstName, lastName, mobile, whatsapp, savedAt = null }: Props) {
+export function SaveContactButton({ id, firstName, lastName, mobile, whatsapp, savedAt = null, renderTrigger }: Props) {
   const vcfPath = `/clients/${id}/vcf`;
   const [saved, setSaved] = useState(savedAt);
   const [loading, setLoading] = useState(false);
@@ -53,6 +55,7 @@ export function SaveContactButton({ id, firstName, lastName, mobile, whatsapp, s
     : vcfPath;
 
   if (!contactPhone({ mobile, whatsapp })) {
+    if (renderTrigger) return renderTrigger({ open: () => {}, saved, loading: false, disabled: true });
     return (
       <span title="Sin celular ni WhatsApp registrado">
         <IconButton disabled aria-label="Sin celular ni WhatsApp registrado">
@@ -81,6 +84,9 @@ export function SaveContactButton({ id, firstName, lastName, mobile, whatsapp, s
   const phone = contactPhone({ mobile, whatsapp });
   return (
     <>
+      {renderTrigger ? (
+        renderTrigger({ open: () => setOpen(true), saved, loading, disabled: loading })
+      ) : (
       <IconButton
         onClick={() => setOpen(true)}
         disabled={loading}
@@ -102,6 +108,7 @@ export function SaveContactButton({ id, firstName, lastName, mobile, whatsapp, s
           </Badge>
         )}
       </IconButton>
+      )}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>¿Guardar contacto en el teléfono?</DialogTitle>
         <DialogContent>

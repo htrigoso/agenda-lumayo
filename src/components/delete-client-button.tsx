@@ -16,7 +16,18 @@ import { deleteClient } from "@/app/(app)/clients/actions";
 /** Word the user must type to enable the delete button (GitHub/Vercel-style safeguard). */
 const CONFIRM_WORD = "eliminar";
 
-export function DeleteClientButton({ id, name, onDeleted }: { id: string; name: string; onDeleted?: () => void }) {
+export function DeleteClientButton({
+  id,
+  name,
+  onDeleted,
+  renderTrigger,
+}: {
+  id: string;
+  name: string;
+  onDeleted?: () => void;
+  /** Custom trigger (e.g. a menu item) instead of the default icon button. */
+  renderTrigger?: (open: () => void) => React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const [pending, startTransition] = useTransition();
@@ -40,11 +51,15 @@ export function DeleteClientButton({ id, name, onDeleted }: { id: string; name: 
 
   return (
     <>
-      <Tooltip title="Eliminar">
-        <IconButton color="error" onClick={() => setOpen(true)}>
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
+      {renderTrigger ? (
+        renderTrigger(() => setOpen(true))
+      ) : (
+        <Tooltip title="Eliminar">
+          <IconButton color="error" onClick={() => setOpen(true)}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       <Dialog open={open} onClose={close} fullWidth maxWidth="xs">
         <DialogTitle>¿Eliminar paciente?</DialogTitle>
         <form

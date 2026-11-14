@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import type { Client } from "@/components/client-form";
 import { type CallInput, type CallSummary, validateCall } from "@/lib/calls";
 import { NEW_TAG, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
+import { safePageSize } from "@/lib/page-size";
 import { assertAdmin } from "@/lib/staff";
 import { createClient } from "@/lib/supabase/server";
 
@@ -84,7 +85,14 @@ export async function markContactSaved(id: string) {
   return data as string;
 }
 
-export async function loadMoreClients(page: number, q: string, onlyPriority: boolean, onlyNew: boolean, onlyDue: boolean) {
+export async function loadMoreClients(
+  page: number,
+  q: string,
+  onlyPriority: boolean,
+  onlyNew: boolean,
+  onlyDue: boolean,
+  pageSize: number,
+) {
   const supabase = await createClient();
   const { data, error } = await fetchClientsPage(supabase, {
     page,
@@ -92,6 +100,7 @@ export async function loadMoreClients(page: number, q: string, onlyPriority: boo
     onlyPriority,
     onlyNew,
     onlyDue,
+    pageSize: safePageSize(pageSize),
   });
   if (error) throw new Error(error.message);
   return (data ?? []) as Client[];

@@ -30,9 +30,19 @@ export const MotionTableRow = motion.create(TableRow);
 export { AnimatePresence };
 
 /** Container whose direct `StaggerItem` children fade up one after another. */
-export function Stagger({ children, spacing = 0, className }: { children: React.ReactNode; spacing?: number; className?: string }) {
+export function Stagger({
+  children,
+  spacing = 0,
+  className,
+  sx,
+}: {
+  children: React.ReactNode;
+  spacing?: number;
+  className?: string;
+  sx?: object;
+}) {
   return (
-    <MotionStack variants={containerVariants} initial="hidden" animate="show" spacing={spacing} className={className}>
+    <MotionStack variants={containerVariants} initial="hidden" animate="show" spacing={spacing} className={className} sx={sx}>
       {children}
     </MotionStack>
   );
