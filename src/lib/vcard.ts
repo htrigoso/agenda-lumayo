@@ -42,6 +42,24 @@ export function buildVCard(c: VCardContact) {
   return lines.join("\r\n") + "\r\n";
 }
 
+/**
+ * Chrome-on-Android intent that opens the phone's native "new contact" form pre-filled
+ * (ContactsContract.Intents.Insert). If no app can handle it, Chrome follows `fallbackUrl`.
+ */
+export function androidContactIntent(c: VCardContact, fallbackUrl: string) {
+  const phone = contactPhone(c);
+  const name = [c.first_name.trim(), c.last_name.trim()].filter(Boolean).join(" ") || phone || "Paciente";
+  const parts = [
+    "action=android.intent.action.INSERT",
+    "type=vnd.android.cursor.dir/raw_contact",
+    `S.name=${encodeURIComponent(name)}`,
+  ];
+  if (phone) parts.push(`S.phone=${encodeURIComponent(toE164(phone))}`, "i.phone_type=2");
+  if (c.email) parts.push(`S.email=${encodeURIComponent(c.email.trim())}`);
+  parts.push(`S.browser_fallback_url=${encodeURIComponent(fallbackUrl)}`);
+  return `intent:#Intent;${parts.join(";")};end`;
+}
+
 export function vcardFileName(c: Pick<VCardContact, "first_name" | "last_name">) {
   const slug = `${c.first_name} ${c.last_name}`
     .normalize("NFD")

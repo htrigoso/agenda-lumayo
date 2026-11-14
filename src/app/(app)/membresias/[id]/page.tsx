@@ -4,6 +4,7 @@ import { connection } from "next/server";
 import Skeleton from "@mui/material/Skeleton";
 import { getMembership } from "@/app/(app)/membresias/actions";
 import { MembershipDetail } from "@/components/membership/membership-detail";
+import { requireAdmin } from "@/lib/staff";
 
 async function Detail({ params }: { params: Promise<{ id: string }> }) {
   await connection();
@@ -13,7 +14,8 @@ async function Detail({ params }: { params: Promise<{ id: string }> }) {
   return <MembershipDetail membership={membership} />;
 }
 
-export default function MembershipPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function MembershipPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdmin();
   return (
     <Suspense fallback={<Skeleton variant="rounded" height={420} />}>
       <Detail params={params} />

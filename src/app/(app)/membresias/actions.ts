@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { assertAdmin } from "@/lib/staff";
 import { createClient } from "@/lib/supabase/server";
 import { PLANS, type PlanKey, type MemberRole, type PersonInput, personError, validityEnd, DNI_PATTERN } from "@/lib/membership";
 
@@ -71,6 +72,7 @@ function friendly(message: string) {
 }
 
 export async function listMemberships(): Promise<MembershipRow[]> {
+  await assertAdmin();
   const supabase = await createClient();
   const { data, error } = await supabase.from("memberships").select(SELECT).order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
@@ -78,6 +80,7 @@ export async function listMemberships(): Promise<MembershipRow[]> {
 }
 
 export async function getMembership(id: string): Promise<MembershipRow | null> {
+  await assertAdmin();
   const supabase = await createClient();
   const { data, error } = await supabase.from("memberships").select(SELECT).eq("id", id).maybeSingle();
   if (error) throw new Error(error.message);
@@ -102,6 +105,7 @@ async function withMembership(patients: Omit<PatientOption, "membership_code">[]
 }
 
 export async function searchPatients(term: string): Promise<PatientOption[]> {
+  await assertAdmin();
   const supabase = await createClient();
   const t = term.trim().replace(/[,()%]/g, "");
   let query = supabase.from("clients").select(PATIENT_COLUMNS).order("first_name").limit(20);
@@ -112,6 +116,7 @@ export async function searchPatients(term: string): Promise<PatientOption[]> {
 }
 
 export async function createPatient(input: { first_name: string; last_name: string; dni: string; mobile: string }) {
+  await assertAdmin();
   const first = input.first_name.trim();
   const last = input.last_name.trim();
   if (!first || !last) return { error: "Nombres y apellidos son obligatorios." as const };
@@ -160,6 +165,7 @@ export type CreateInput = {
 };
 
 export async function createMembership(input: CreateInput): Promise<{ id?: string; error?: string }> {
+  await assertAdmin();
   const plan = PLANS[input.plan];
   if (!plan) return { error: "Tarjeta no válida." };
   if (!input.holder) return { error: "Elige el titular." };
@@ -191,6 +197,7 @@ export async function createMembership(input: CreateInput): Promise<{ id?: strin
 }
 
 export async function addAdditional(membershipId: string, input: AdditionalInput) {
+  await assertAdmin();
   if ("person" in input) {
     const problem = await checkPerson(input.person);
     if (problem) return { error: problem };
@@ -205,6 +212,7 @@ export async function addAdditional(membershipId: string, input: AdditionalInput
 }
 
 export async function removeAdditional(membershipId: string, memberId: string) {
+  await assertAdmin();
   const supabase = await createClient();
   const { error } = await supabase.from("membership_members").delete().eq("id", memberId).eq("role", "additional");
   if (error) return { error: error.message };
@@ -213,6 +221,7 @@ export async function removeAdditional(membershipId: string, memberId: string) {
 }
 
 export async function renewMembership(membershipId: string, startsOn: string, fee: number, method: string) {
+  await assertAdmin();
   const supabase = await createClient();
   const { error } = await supabase.from("membership_periods").insert({
     membership_id: membershipId,
@@ -229,6 +238,7 @@ export async function renewMembership(membershipId: string, startsOn: string, fe
 }
 
 export async function cancelMembership(membershipId: string) {
+  await assertAdmin();
   const supabase = await createClient();
   const { error } = await supabase.from("memberships").update({ cancelled_at: new Date().toISOString() }).eq("id", membershipId);
   if (error) return { error: error.message };

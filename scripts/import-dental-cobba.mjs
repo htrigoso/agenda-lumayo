@@ -47,6 +47,26 @@ export function isPlaceholderPhone(phone) {
   return Object.values(counts).some((n) => n >= 7);
 }
 
+/** Positions where `value` differs from repeating its first `period` characters. */
+function periodMismatches(value, period) {
+  let n = 0;
+  for (let i = period; i < value.length; i++) if (value[i] !== value[i % period]) n++;
+  return n;
+}
+
+/**
+ * Made-up DNIs typed to fill the field (11111111, 00000018, 86868686, 12312312…).
+ * They are dropped because two different people sharing one would be merged as the same patient.
+ */
+export function isFillerDni(dni) {
+  const value = String(dni ?? "");
+  if (!/^\d{8}$/.test(value)) return false;
+  const counts = {};
+  for (const ch of value) counts[ch] = (counts[ch] ?? 0) + 1;
+  if (Object.values(counts).some((n) => n >= 6)) return true;
+  return periodMismatches(value, 2) <= 2 || periodMismatches(value, 3) <= 1;
+}
+
 const PARTICLES = new Set(["de", "del", "la", "las", "los"]);
 
 /** Peruvian names: the last two surnames go to last_name, keeping particles ("del Águila") attached. */
@@ -60,7 +80,7 @@ export function splitName(raw) {
   return { first_name: words.slice(0, cut).join(" "), last_name: words.slice(cut).join(" ") };
 }
 
-export function buildDescription(p, { dniPending = false, phoneRejected = null, source = null } = {}) {
+export function buildDescription(p, { dniPending = false, dniFiller = false, phoneRejected = null, source = null } = {}) {
   const lines = [IMPORT_MARK + (source ? ` · ${source}` : "") + (p.fecha ? ` (ficha ${p.fecha})` : "")];
   if (blank(p.motivo_consulta)) lines.push(`Motivo: ${p.motivo_consulta.trim()}`);
   const tx = (p.diagnosticos ?? [])
@@ -73,6 +93,7 @@ export function buildDescription(p, { dniPending = false, phoneRejected = null, 
   const verify = [
     blank(p.datos_por_verificar),
     dniPending && `DNI ilegible en ficha: ${p.dni}`,
+    dniFiller && `DNI de relleno en ficha: ${p.dni}`,
     phoneRejected && `Teléfono de relleno en ficha: ${phoneRejected}`,
   ].filter(Boolean);
   if (verify.length) lines.push(`Por verificar: ${verify.join("; ")}`);
@@ -81,7 +102,8 @@ export function buildDescription(p, { dniPending = false, phoneRejected = null, 
 
 export function toClient(p, { source = null } = {}) {
   const dniRaw = blank(p.dni);
-  const dniValid = dniRaw && /^\d{8}$/.test(dniRaw) ? dniRaw : null;
+  const dniFiller = isFillerDni(dniRaw);
+  const dniValid = dniRaw && /^\d{8}$/.test(dniRaw) && !dniFiller ? dniRaw : null;
   const candidate = p.telefono_valido ? blank(p.telefono) : null;
   const placeholder = candidate && isPlaceholderPhone(candidate);
   const phone = placeholder ? null : candidate;
@@ -96,7 +118,8 @@ export function toClient(p, { source = null } = {}) {
     occupation: blank(p.ocupacion),
     legacy_record_number: blank(p.historia_clinica),
     description: buildDescription(p, {
-      dniPending: Boolean(dniRaw && !dniValid),
+      dniPending: Boolean(dniRaw && !dniValid && !dniFiller),
+      dniFiller,
       phoneRejected: placeholder ? candidate : null,
       source,
     }),
@@ -154,10 +177,21 @@ returning id
 select (select count(*) from fill) as updated, (select count(*) from ins) as inserted;`;
 }
 
+/** Maps sheet records to client rows; with requirePhone, patients without a usable mobile are skipped. */
+export function selectRows(pacientes, opts = {}) {
+  return pacientes
+    .map((p) => toClient(p, opts))
+    .filter((c) => c.first_name || c.mobile || c.dni)
+    .filter((c) => !opts.requirePhone || c.mobile || c.whatsapp);
+}
+
 function parseArgs(argv) {
   const [jsonPath, userId, ...rest] = argv;
   const opts = { jsonPath, userId, tag: null, source: null, chunk: 0, out: null };
-  for (let i = 0; i < rest.length; i += 2) opts[rest[i].replace(/^--/, "")] = rest[i + 1];
+  for (let i = 0; i < rest.length; i++) {
+    if (rest[i] === "--require-phone") opts.requirePhone = true;
+    else opts[rest[i].replace(/^--/, "")] = rest[++i];
+  }
   opts.chunk = Number(opts.chunk) || 0;
   return opts;
 }
@@ -165,11 +199,11 @@ function parseArgs(argv) {
 function main() {
   const opts = parseArgs(process.argv.slice(2));
   if (!opts.jsonPath || !opts.userId) {
-    console.error('Usage: node scripts/import-dental-cobba.mjs <json> <user_id> [--tag nuevo] [--source "Bloque 1"] [--chunk 300] [--out dir]');
+    console.error('Usage: node scripts/import-dental-cobba.mjs <json> <user_id> [--tag nuevo] [--source "Bloque 1"] [--chunk 300] [--out dir] [--require-phone]');
     process.exit(1);
   }
   const data = JSON.parse(readFileSync(opts.jsonPath, "utf8"));
-  const rows = data.pacientes.map((p) => toClient(p, opts)).filter((c) => c.first_name || c.mobile || c.dni);
+  const rows = selectRows(data.pacientes, opts);
   if (!opts.out) {
     console.log(buildSql(rows, opts));
   } else {

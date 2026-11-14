@@ -24,6 +24,7 @@ export type Client = {
   description: string | null;
   is_priority: boolean;
   tags: string[];
+  contact_saved_at?: string | null;
   record_number?: number;
   dni?: string | null;
   birth_date?: string | null;
@@ -33,6 +34,10 @@ export type Client = {
   emergency_contact?: string | null;
   legacy_record_number?: string | null;
   membership?: { id: string; code: string; plan: "classic" | "gold" } | null;
+  last_call_at?: string | null;
+  last_call_outcome?: string | null;
+  last_call_by?: string | null;
+  next_call_on?: string | null;
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -158,6 +163,16 @@ export function ClientForm({ client }: { client?: Client }) {
             <FormControlLabel
               control={<Switch name="is_new" defaultChecked={client?.tags?.includes(NEW_TAG) ?? false} color="info" />}
               label="Paciente nuevo"
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: "flex", alignItems: "center" }}>
+            <FormControlLabel
+              control={<Switch name="contact_saved" defaultChecked={Boolean(client?.contact_saved_at)} color="success" />}
+              label={
+                client?.contact_saved_at
+                  ? `Contacto descargado (${new Date(client.contact_saved_at).toLocaleDateString("es-PE")})`
+                  : "Contacto descargado"
+              }
             />
           </Grid>
           <Grid size={12}>

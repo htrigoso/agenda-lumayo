@@ -10,8 +10,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/EditOutlined";
+import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import type { Client } from "@/components/client-form";
 import { ClientAvatar } from "@/components/client-avatar";
 import { MotionTableBody, MotionTableRow, containerVariants, itemVariants } from "@/components/motion";
@@ -22,24 +24,37 @@ import { PriorityChip } from "@/components/priority-chip";
 import { NewChip } from "@/components/new-chip";
 import { NEW_TAG } from "@/lib/clients-query";
 import { SaveContactButton } from "@/components/save-contact-button";
+import { LastCall } from "@/components/last-call";
 
-export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emptyMessage: string }) {
+type Props = {
+  clients: Client[];
+  emptyMessage: string;
+  /** staff user_id → full name, for "who called". */
+  staffNames: Record<string, string>;
+  /** Lima calendar day (YYYY-MM-DD). */
+  today: string;
+  /** Workers get a read-only list: no edit or delete. */
+  isAdmin: boolean;
+};
+
+export function ClientsTable({ clients, emptyMessage, staffNames, today, isAdmin }: Props) {
   return (
     <TableContainer component={Paper}>
-      <Table>
+      <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>Paciente</TableCell>
             <TableCell>Celular</TableCell>
             <TableCell>WhatsApp</TableCell>
+            <TableCell>Última llamada</TableCell>
             <TableCell align="center">Contacto</TableCell>
-            <TableCell align="right">Acciones</TableCell>
+            {isAdmin && <TableCell align="right">Acciones</TableCell>}
           </TableRow>
         </TableHead>
         <MotionTableBody variants={containerVariants} initial="hidden" animate="show">
           {clients.length === 0 && (
             <TableRow>
-              <TableCell colSpan={5} align="center" sx={{ py: 6, color: "text.secondary" }}>
+              <TableCell colSpan={isAdmin ? 6 : 5} align="center" sx={{ py: 6, color: "text.secondary" }}>
                 {emptyMessage}
               </TableCell>
             </TableRow>
@@ -73,15 +88,25 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
                   "—"
                 )}
               </TableCell>
-              <TableCell align="center">
-                <SaveContactButton id={c.id} mobile={c.mobile} whatsapp={c.whatsapp} />
+              <TableCell>
+                <LastCall call={c} staffNames={staffNames} today={today} maxWidth={220} />
               </TableCell>
-              <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
-                <IconButton href={`/clients/${c.id}`} aria-label="Editar" title="Editar">
-                  <EditIcon />
-                </IconButton>
-                <DeleteClientButton id={c.id} name={`${c.first_name} ${c.last_name}`} />
+              <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                <Tooltip title="Llamadas">
+                  <IconButton href={`/clients/${c.id}?tab=llamadas`} aria-label="Llamadas">
+                    <PhoneIcon />
+                  </IconButton>
+                </Tooltip>
+                {isAdmin && <SaveContactButton id={c.id} firstName={c.first_name} lastName={c.last_name} mobile={c.mobile} whatsapp={c.whatsapp} savedAt={c.contact_saved_at} />}
               </TableCell>
+              {isAdmin && (
+                <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
+                  <IconButton href={`/clients/${c.id}`} aria-label="Editar" title="Editar">
+                    <EditIcon />
+                  </IconButton>
+                  <DeleteClientButton id={c.id} name={`${c.first_name} ${c.last_name}`} />
+                </TableCell>
+              )}
             </MotionTableRow>
           ))}
         </MotionTableBody>

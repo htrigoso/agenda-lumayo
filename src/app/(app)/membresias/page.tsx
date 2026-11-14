@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import { listMemberships } from "@/app/(app)/membresias/actions";
 import { MembershipsBrowser } from "@/components/membership/memberships-browser";
+import { requireAdmin } from "@/lib/staff";
 
 async function MembershipsList() {
   await connection();
@@ -26,7 +27,8 @@ function ListSkeleton() {
   );
 }
 
-export default function MembershipsPage() {
+export default async function MembershipsPage() {
+  await requireAdmin();
   return (
     <>
       <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1.5, mb: 3 }}>

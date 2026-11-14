@@ -14,14 +14,19 @@ import { StatCard } from "@/components/stat-card";
 import { ClientsView } from "@/components/clients-view";
 import { SearchBox } from "@/components/search-box";
 import { PAGE_SIZE, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
+import { limaToday } from "@/lib/calls";
+import { getCurrentStaff, getStaffNames } from "@/lib/staff";
 import { createClient } from "@/lib/supabase/server";
 import { connection } from "next/server";
 
-function pageHref(page: number, term: string, onlyPriority: boolean, onlyNew: boolean) {
+type Filters = { term: string; onlyPriority: boolean; onlyNew: boolean; onlyDue: boolean };
+
+function pageHref(page: number, { term, onlyPriority, onlyNew, onlyDue }: Filters) {
   const params = new URLSearchParams();
   if (term) params.set("q", term);
   if (onlyPriority) params.set("potential", "1");
   if (onlyNew) params.set("new", "1");
+  if (onlyDue) params.set("call", "1");
   if (page > 1) params.set("page", String(page));
   const qs = params.toString();
   return qs ? `/?${qs}` : "/";
@@ -30,28 +35,33 @@ function pageHref(page: number, term: string, onlyPriority: boolean, onlyNew: bo
 async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
   // Per-request, per-user data: render at request time, never prerender it.
   await connection();
-  const { q, potential, new: newParam, page: pageParam } = await searchParams;
+  const { q, potential, new: newParam, call, page: pageParam } = await searchParams;
   const onlyPriority = potential === "1";
   const onlyNew = newParam === "1";
+  const onlyDue = call === "1";
   const term = sanitizeTerm(q);
+  const filters = { term, onlyPriority, onlyNew, onlyDue };
 
   const rawPage = typeof pageParam === "string" ? Number.parseInt(pageParam, 10) : 1;
   const requestedPage = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1;
 
   const supabase = await createClient();
   const head = { count: "exact", head: true } as const;
-  const [list, totalRes, whatsappRes, emailRes] = await Promise.all([
-    fetchClientsPage(supabase, { page: requestedPage, term, onlyPriority, onlyNew }),
+  const [list, totalRes, whatsappRes, emailRes, staffNames, staff] = await Promise.all([
+    fetchClientsPage(supabase, { page: requestedPage, ...filters }),
     supabase.from("clients").select("id", head),
     supabase.from("clients").select("id", head).not("whatsapp", "is", null),
     supabase.from("clients").select("id", head).not("email", "is", null),
+    getStaffNames(),
+    getCurrentStaff(),
   ]);
+  const isAdmin = staff?.role === "admin";
 
   const clients = list.data as Client[] | null;
   const matches = list.count ?? 0;
   const pageCount = Math.max(1, Math.ceil(matches / PAGE_SIZE));
   // Out-of-range pages (e.g. after deleting the last item of a page) show the last page.
-  if (requestedPage > pageCount && matches > 0) redirect(pageHref(pageCount, term, onlyPriority, onlyNew));
+  if (requestedPage > pageCount && matches > 0) redirect(pageHref(pageCount, filters));
   const page = requestedPage;
   const from = matches === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const to = Math.min(page * PAGE_SIZE, matches);
@@ -75,10 +85,12 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
       </Grid>
 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <SearchBox initial={term} onlyPriority={onlyPriority} onlyNew={onlyNew} />
-        <Button href="/clients/new" variant="contained" startIcon={<AddIcon />}>
-          Nuevo paciente
-        </Button>
+        <SearchBox initial={term} onlyPriority={onlyPriority} onlyNew={onlyNew} onlyDue={onlyDue} />
+        {isAdmin && (
+          <Button href="/clients/new" variant="contained" startIcon={<AddIcon />}>
+            Nuevo paciente
+          </Button>
+        )}
       </Stack>
 
       <ClientsView
@@ -91,6 +103,10 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
         term={term}
         onlyPriority={onlyPriority}
         onlyNew={onlyNew}
+        onlyDue={onlyDue}
+        staffNames={staffNames}
+        today={limaToday()}
+        isAdmin={isAdmin}
       />
     </Stack>
   );

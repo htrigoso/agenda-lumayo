@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildVCard, contactPhone, toE164, vcardFileName } from "./vcard.ts";
+import { androidContactIntent, buildVCard, contactPhone, toE164, vcardFileName } from "./vcard.ts";
 
 const base = { first_name: "Juan Carlos", last_name: "Pérez Ríos", mobile: "987654321", email: null };
 
@@ -67,4 +67,22 @@ test("contactPhone falls back to WhatsApp", () => {
   assert.equal(contactPhone({ mobile: null, whatsapp: "912345678" }), "912345678");
   assert.equal(contactPhone({ mobile: "987654321", whatsapp: "912345678" }), "987654321");
   assert.equal(contactPhone({ mobile: null, whatsapp: null }), null);
+});
+
+test("androidContactIntent opens the native insert-contact screen with name and +51 phone", () => {
+  const href = androidContactIntent(base, "https://app.test/clients/1/vcf");
+  assert.match(href, /^intent:#Intent;/);
+  assert.match(href, /action=android\.intent\.action\.INSERT;/);
+  assert.match(href, /type=vnd\.android\.cursor\.dir\/raw_contact;/);
+  assert.match(href, /S\.name=Juan%20Carlos%20P%C3%A9rez%20R%C3%ADos;/);
+  assert.match(href, /S\.phone=%2B51987654321;/);
+  assert.match(href, /i\.phone_type=2;/);
+  assert.match(href, /S\.browser_fallback_url=https%3A%2F%2Fapp\.test%2Fclients%2F1%2Fvcf;/);
+  assert.match(href, /;end$/);
+});
+
+test("androidContactIntent falls back to WhatsApp and escapes ; and = in names", () => {
+  const href = androidContactIntent({ ...base, first_name: "A;B=C", mobile: null, whatsapp: "912345678" }, "https://x/v");
+  assert.match(href, /S\.phone=%2B51912345678;/);
+  assert.match(href, /S\.name=A%3BB%3DC%20/);
 });

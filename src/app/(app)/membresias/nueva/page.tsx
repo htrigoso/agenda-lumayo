@@ -5,13 +5,15 @@ import Link from "@mui/material/Link";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { NewMembershipForm } from "@/components/membership/new-membership-form";
+import { requireAdmin } from "@/lib/staff";
 
 async function Form() {
   await connection();
   return <NewMembershipForm />;
 }
 
-export default function NewMembershipPage() {
+export default async function NewMembershipPage() {
+  await requireAdmin();
   return (
     <>
       <Breadcrumbs sx={{ mb: 1 }}>

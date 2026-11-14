@@ -8,12 +8,14 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { loadMoreClients } from "@/app/(app)/clients/actions";
+import { PAGE_SIZE } from "@/lib/clients-query";
 import type { Client } from "@/components/client-form";
 import { ClientAvatar } from "@/components/client-avatar";
 import { AnimatePresence, LiftCard, Stagger } from "@/components/motion";
@@ -24,6 +26,7 @@ import { PriorityChip } from "@/components/priority-chip";
 import { NewChip } from "@/components/new-chip";
 import { NEW_TAG } from "@/lib/clients-query";
 import { SaveContactButton } from "@/components/save-contact-button";
+import { LastCall } from "@/components/last-call";
 
 type Props = {
   initial: Client[];
@@ -34,19 +37,26 @@ type Props = {
   term: string;
   onlyPriority: boolean;
   onlyNew: boolean;
+  onlyDue: boolean;
+  /** staff user_id → full name, for "who called". */
+  staffNames: Record<string, string>;
+  /** Lima calendar day (YYYY-MM-DD). */
+  today: string;
+  /** Workers get a read-only list: no edit or delete. */
+  isAdmin: boolean;
 };
 
-export function ClientCards({ initial, total, page, term, onlyPriority, onlyNew }: Props) {
+export function ClientCards({ initial, total, page, term, onlyPriority, onlyNew, onlyDue, staffNames, today, isAdmin }: Props) {
   const [items, setItems] = useState(initial);
   const [lastPage, setLastPage] = useState(page);
   const [removed, setRemoved] = useState(0);
   const [pending, startTransition] = useTransition();
 
-  const remaining = total - removed - items.length - (page - 1) * 50 > 0;
+  const remaining = total - removed - items.length - (page - 1) * PAGE_SIZE > 0;
 
   function loadMore() {
     startTransition(async () => {
-      const next = await loadMoreClients(lastPage + 1, term, onlyPriority, onlyNew);
+      const next = await loadMoreClients(lastPage + 1, term, onlyPriority, onlyNew, onlyDue);
       setItems((prev) => [...prev, ...next.filter((n) => !prev.some((p) => p.id === n.id))]);
       setLastPage((p) => p + 1);
     });
@@ -55,7 +65,7 @@ export function ClientCards({ initial, total, page, term, onlyPriority, onlyNew 
   if (items.length === 0) {
     return (
       <Paper sx={{ p: 4, textAlign: "center", color: "text.secondary" }}>
-        {term || onlyPriority || onlyNew ? "Ningún paciente coincide con tu búsqueda." : "Aún no hay pacientes. ¡Agrega el primero!"}
+        {term || onlyPriority || onlyNew || onlyDue ? "Ningún paciente coincide con tu búsqueda." : "Aún no hay pacientes. ¡Agrega el primero!"}
       </Paper>
     );
   }
@@ -76,19 +86,33 @@ export function ClientCards({ initial, total, page, term, onlyPriority, onlyNew 
                   H.C. {formatRecordNumber(c.record_number)}
                 </Typography>
               )}
+              {(c.last_call_at || c.next_call_on) && (
+                <Box sx={{ mt: 0.5 }}>
+                  <LastCall call={c} staffNames={staffNames} today={today} />
+                </Box>
+              )}
             </Box>
-            <SaveContactButton id={c.id} mobile={c.mobile} whatsapp={c.whatsapp} />
-            <IconButton href={`/clients/${c.id}`} aria-label="Editar">
-              <EditIcon />
-            </IconButton>
-            <DeleteClientButton
-              id={c.id}
-              name={`${c.first_name} ${c.last_name}`}
-              onDeleted={() => {
-                setItems((prev) => prev.filter((p) => p.id !== c.id));
-                setRemoved((n) => n + 1);
-              }}
-            />
+            <Tooltip title="Llamadas">
+              <IconButton href={`/clients/${c.id}?tab=llamadas`} aria-label="Llamadas">
+                <PhoneIcon />
+              </IconButton>
+            </Tooltip>
+            {isAdmin && <SaveContactButton id={c.id} firstName={c.first_name} lastName={c.last_name} mobile={c.mobile} whatsapp={c.whatsapp} savedAt={c.contact_saved_at} />}
+            {isAdmin && (
+              <>
+                <IconButton href={`/clients/${c.id}`} aria-label="Editar">
+                  <EditIcon />
+                </IconButton>
+                <DeleteClientButton
+                  id={c.id}
+                  name={`${c.first_name} ${c.last_name}`}
+                  onDeleted={() => {
+                    setItems((prev) => prev.filter((p) => p.id !== c.id));
+                    setRemoved((n) => n + 1);
+                  }}
+                />
+              </>
+            )}
           </Stack>
           {(c.mobile || c.whatsapp || c.email || c.description) && <Divider sx={{ my: 1.5 }} />}
           <Stack spacing={0.75}>
