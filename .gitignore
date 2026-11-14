@@ -42,3 +42,5 @@ next-env.d.ts
 note.txt
 supabase/*
 .atl
+public/Pacientes_*.json
+data/raw/
