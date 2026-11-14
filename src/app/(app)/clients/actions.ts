@@ -99,7 +99,7 @@ export async function loadMoreClients(page: number, q: string, onlyPriority: boo
 
 export type CallLog = {
   id: string;
-  outcome: string;
+  outcome: string | null;
   notes: string | null;
   follow_up_on: string | null;
   created_at: string;
@@ -116,7 +116,7 @@ export async function logCall(clientId: string, input: CallInput): Promise<CallS
   const supabase = await createClient();
   const { error } = await supabase.from("call_logs").insert({
     client_id: clientId,
-    outcome: input.outcome,
+    outcome: input.outcome || null,
     notes: input.notes.trim() || null,
     follow_up_on: input.followUpOn.trim() || null,
   });

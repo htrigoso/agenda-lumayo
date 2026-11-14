@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { StaffRole } from "@/lib/team";
@@ -11,6 +12,8 @@ export type CurrentStaff = { userId: string; fullName: string; role: StaffRole }
  * Cached per request so the layout, nav and pages share one lookup.
  */
 export const getCurrentStaff = cache(async (): Promise<CurrentStaff | null> => {
+  // Reading the auth session touches Date.now(): mark the render as request-time first (Cache Components).
+  await connection();
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return null;

@@ -38,7 +38,7 @@ export function CallDueChip({ nextCallOn, today }: { nextCallOn: string; today: 
 /** Outcome of the patient's last call with its relative date, plus a "Llamar hoy" flag when due. */
 export function LastCall({ call, staffNames, today, maxWidth }: Props) {
   const due = isCallDue(call.next_call_on, today);
-  if (!call.last_call_at || !call.last_call_outcome) {
+  if (!call.last_call_at) {
     return due ? <CallDueChip nextCallOn={call.next_call_on!} today={today} /> : <Typography color="text.secondary">—</Typography>;
   }
   const who = call.last_call_by ? staffNames[call.last_call_by] : undefined;

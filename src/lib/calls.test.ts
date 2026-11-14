@@ -2,6 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   CALL_OUTCOMES,
+  CALL_OUTCOME_GROUPS,
+  outcomesByGroup,
   addDays,
   groupCallsByMonth,
   isCallDue,
@@ -14,11 +16,26 @@ import {
 
 const TODAY = "2026-11-14";
 
-test("CALL_OUTCOMES lists every outcome in the agreed order", () => {
-  assert.deepEqual(
-    CALL_OUTCOMES.map((o) => o.key),
-    ["appointment", "call_back", "send_info", "no_answer", "unreachable", "wrong_number", "not_interested", "other"],
-  );
+test("CALL_OUTCOMES has unique keys, every one in a known group", () => {
+  const keys = CALL_OUTCOMES.map((o) => o.key);
+  assert.equal(new Set(keys).size, keys.length);
+  const groups = new Set(CALL_OUTCOME_GROUPS.map((g) => g.key));
+  for (const o of CALL_OUTCOMES) assert.ok(groups.has(o.group), `${o.key} has unknown group ${o.group}`);
+  assert.ok(CALL_OUTCOMES.length >= 35);
+});
+
+test("CALL_OUTCOMES keeps the original keys stored in existing calls", () => {
+  const keys = new Set(CALL_OUTCOMES.map((o) => o.key));
+  for (const k of ["appointment", "call_back", "send_info", "no_answer", "unreachable", "wrong_number", "not_interested", "other"]) {
+    assert.ok(keys.has(k), k);
+  }
+});
+
+test("outcomesByGroup returns every group in order with its outcomes", () => {
+  const grouped = outcomesByGroup();
+  assert.deepEqual(grouped.map((g) => g.key), CALL_OUTCOME_GROUPS.map((g) => g.key));
+  assert.equal(grouped.flatMap((g) => g.outcomes).length, CALL_OUTCOMES.length);
+  assert.equal(grouped[0].outcomes[0].key, "appointment");
 });
 
 test("only call_back needs a date and only other needs notes", () => {
@@ -44,7 +61,20 @@ test("validateCall accepts a plain outcome", () => {
 
 test("validateCall rejects an unknown outcome", () => {
   assert.match(validateCall({ outcome: "bogus", notes: "", followUpOn: "" }, TODAY) ?? "", /resultado/i);
-  assert.match(validateCall({ outcome: "", notes: "", followUpOn: "" }, TODAY) ?? "", /resultado/i);
+});
+
+test("validateCall: the outcome is optional, but a call needs an outcome or a note", () => {
+  assert.equal(validateCall({ outcome: "", notes: "Dejó recado con la hija", followUpOn: "" }, TODAY), null);
+  assert.match(validateCall({ outcome: "", notes: "   ", followUpOn: "" }, TODAY) ?? "", /resultado o.*nota/i);
+});
+
+test("validateCall checks a date given without an outcome", () => {
+  assert.match(validateCall({ outcome: "", notes: "Llamar luego", followUpOn: "2026-11-01" }, TODAY) ?? "", /pasad/i);
+});
+
+test("outcomeLabel/outcomeOption handle a call with no outcome", () => {
+  assert.equal(outcomeLabel(null), "Nota");
+  assert.equal(outcomeOption(null), undefined);
 });
 
 test("validateCall requires notes for other (blank does not count)", () => {

@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 import CallIcon from "@mui/icons-material/Call";
 import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalkOutlined";
 import { logCall } from "@/app/(app)/clients/actions";
-import { CALL_OUTCOMES, type CallSummary, addDays, formatDay, limaToday, outcomeOption, validateCall } from "@/lib/calls";
+import { type CallSummary, addDays, formatDay, limaToday, outcomeLabel, outcomeOption, outcomesByGroup, validateCall } from "@/lib/calls";
 import { contactPhone } from "@/lib/vcard";
 
 type Props = {
@@ -94,24 +94,35 @@ function CallForm({ clientId, mobile, whatsapp, onLogged, onClose }: FormProps) 
           )}
           <div>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              ¿Cómo fue la llamada?
+              ¿Cómo fue la llamada? (opcional)
             </Typography>
-            <Stack direction="row" sx={{ flexWrap: "wrap", gap: 1 }} role="radiogroup" aria-label="Resultado de la llamada">
-              {CALL_OUTCOMES.map((o) => {
-                const selected = o.key === outcome;
-                return (
-                  <Chip
-                    key={o.key}
-                    label={o.label}
-                    color={o.color}
-                    variant={selected ? "filled" : "outlined"}
-                    onClick={() => setOutcome(o.key)}
-                    role="radio"
-                    aria-checked={selected}
-                    sx={{ fontWeight: selected ? 700 : 500 }}
-                  />
-                );
-              })}
+            <Stack spacing={1.5} role="radiogroup" aria-label="Resultado de la llamada">
+              {outcomesByGroup().map((group) => (
+                <div key={group.key}>
+                  <Typography variant="caption" color="text.secondary" sx={{ display: "block", fontWeight: 700, mb: 0.75 }}>
+                    {group.label}
+                  </Typography>
+                  <Stack direction="row" sx={{ flexWrap: "wrap", gap: 0.75 }}>
+                    {group.outcomes.map((o) => {
+                      const selected = o.key === outcome;
+                      return (
+                        <Chip
+                          key={o.key}
+                          size="small"
+                          label={o.label}
+                          color={o.color}
+                          variant={selected ? "filled" : "outlined"}
+                          // Tapping the selected outcome again clears it (the outcome is optional).
+                          onClick={() => setOutcome(selected ? "" : o.key)}
+                          role="radio"
+                          aria-checked={selected}
+                          sx={{ fontWeight: selected ? 700 : 500 }}
+                        />
+                      );
+                    })}
+                  </Stack>
+                </div>
+              ))}
             </Stack>
           </div>
           {option?.needsDate && (
@@ -131,7 +142,13 @@ function CallForm({ clientId, mobile, whatsapp, onLogged, onClose }: FormProps) 
             multiline
             minRows={2}
             required={option?.needsNotes}
-            helperText={option?.needsNotes ? "Obligatorio: describe qué pasó en la llamada." : "Opcional"}
+            helperText={
+              option?.needsNotes
+                ? "Obligatorio: describe qué pasó en la llamada."
+                : option
+                  ? "Opcional"
+                  : "Si no eliges un resultado, escribe una nota."
+            }
           />
           {error && <Alert severity="error">{error}</Alert>}
         </Stack>
@@ -140,7 +157,7 @@ function CallForm({ clientId, mobile, whatsapp, onLogged, onClose }: FormProps) 
         <Button onClick={onClose} disabled={pending}>
           Cancelar
         </Button>
-        <Button type="submit" variant="contained" disabled={pending || !outcome}>
+        <Button type="submit" variant="contained" disabled={pending || (!outcome && !notes.trim())}>
           Guardar
         </Button>
       </DialogActions>
@@ -150,7 +167,7 @@ function CallForm({ clientId, mobile, whatsapp, onLogged, onClose }: FormProps) 
         <DialogContent>
           <Stack spacing={1.5}>
             <div>
-              <Chip label={option?.label} color={option?.color} sx={{ fontWeight: 700 }} />
+              <Chip label={outcomeLabel(outcome)} color={option?.color ?? "default"} sx={{ fontWeight: 700 }} />
             </div>
             {input.followUpOn && (
               <Typography variant="body2">

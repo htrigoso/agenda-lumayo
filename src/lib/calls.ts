@@ -1,10 +1,23 @@
 /** MUI Chip colors used for call outcomes. */
 export type OutcomeColor = "success" | "warning" | "info" | "error" | "default";
 
+/** Sections the outcomes are shown under in the "Registrar llamada" dialog. */
+export const CALL_OUTCOME_GROUPS = [
+  { key: "appointments", label: "Citas" },
+  { key: "interest", label: "Interés y consultas" },
+  { key: "treatment", label: "Tratamiento y pagos" },
+  { key: "not_reached", label: "No se pudo hablar" },
+  { key: "not_interested", label: "No interesado / baja" },
+  { key: "other", label: "Otros" },
+] as const;
+
+export type OutcomeGroup = (typeof CALL_OUTCOME_GROUPS)[number]["key"];
+
 export type CallOutcome = {
   key: string;
   label: string;
   color: OutcomeColor;
+  group: OutcomeGroup;
   /** The outcome needs a follow-up date (DB constraint for call_back). */
   needsDate?: boolean;
   /** The outcome needs non-blank notes (DB constraint for other). */
@@ -13,15 +26,57 @@ export type CallOutcome = {
 
 /** Ordered as staff pick them in the dialog; keys match the call_logs.outcome check constraint. */
 export const CALL_OUTCOMES: readonly CallOutcome[] = [
-  { key: "appointment", label: "Agendó cita", color: "success" },
-  { key: "call_back", label: "Volver a llamar", color: "warning", needsDate: true },
-  { key: "send_info", label: "Enviar info por WhatsApp", color: "info" },
-  { key: "no_answer", label: "No contesta", color: "default" },
-  { key: "unreachable", label: "Apagado / fuera de servicio", color: "default" },
-  { key: "wrong_number", label: "Número equivocado", color: "error" },
-  { key: "not_interested", label: "No interesado", color: "error" },
-  { key: "other", label: "Otro", color: "default", needsNotes: true },
+  // Citas
+  { key: "appointment", label: "Agendó cita", color: "success", group: "appointments" },
+  { key: "confirmed", label: "Confirmó su cita", color: "success", group: "appointments" },
+  { key: "rescheduled", label: "Reprogramó su cita", color: "info", group: "appointments" },
+  { key: "cancelled", label: "Canceló su cita", color: "error", group: "appointments" },
+  { key: "no_show", label: "No asistió a su cita", color: "warning", group: "appointments" },
+  { key: "call_back", label: "Volver a llamar", color: "warning", group: "appointments", needsDate: true },
+  { key: "prefers_whatsapp", label: "Prefiere coordinar por WhatsApp", color: "info", group: "appointments" },
+  // Interés y consultas
+  { key: "send_info", label: "Enviar info por WhatsApp", color: "info", group: "interest" },
+  { key: "asked_prices", label: "Consultó precios / presupuesto", color: "info", group: "interest" },
+  { key: "wants_evaluation", label: "Quiere evaluación / diagnóstico", color: "success", group: "interest" },
+  { key: "wants_treatment", label: "Interesado en tratamiento", color: "success", group: "interest" },
+  { key: "asked_promotions", label: "Consultó promociones", color: "info", group: "interest" },
+  { key: "asked_membership", label: "Interesado en membresía", color: "success", group: "interest" },
+  { key: "asked_insurance", label: "Consultó seguro / convenio", color: "info", group: "interest" },
+  { key: "asked_financing", label: "Consultó financiamiento / cuotas", color: "info", group: "interest" },
+  { key: "will_think", label: "Lo pensará", color: "warning", group: "interest" },
+  { key: "will_consult_family", label: "Consultará con su familia", color: "warning", group: "interest" },
+  // Tratamiento y pagos
+  { key: "dental_pain", label: "Urgencia / dolor dental", color: "error", group: "treatment" },
+  { key: "treatment_follow_up", label: "Control de tratamiento", color: "info", group: "treatment" },
+  { key: "post_treatment", label: "Seguimiento post tratamiento", color: "info", group: "treatment" },
+  { key: "orthodontic_control", label: "Control de ortodoncia", color: "info", group: "treatment" },
+  { key: "cleaning_reminder", label: "Recordatorio de limpieza", color: "info", group: "treatment" },
+  { key: "pending_payment", label: "Pago pendiente", color: "warning", group: "treatment" },
+  { key: "payment_done", label: "Realizó su pago", color: "success", group: "treatment" },
+  { key: "satisfied", label: "Satisfecho con la atención", color: "success", group: "treatment" },
+  { key: "complaint", label: "Queja / reclamo", color: "error", group: "treatment" },
+  // No se pudo hablar
+  { key: "no_answer", label: "No contesta", color: "default", group: "not_reached" },
+  { key: "busy", label: "Ocupado / cortó la llamada", color: "default", group: "not_reached" },
+  { key: "voicemail", label: "Buzón de voz", color: "default", group: "not_reached" },
+  { key: "unreachable", label: "Apagado / fuera de servicio", color: "default", group: "not_reached" },
+  { key: "third_party", label: "Contestó un familiar / tercero", color: "default", group: "not_reached" },
+  { key: "wrong_number", label: "Número equivocado", color: "error", group: "not_reached" },
+  // No interesado / baja
+  { key: "not_interested", label: "No interesado", color: "error", group: "not_interested" },
+  { key: "no_budget", label: "Sin presupuesto por ahora", color: "warning", group: "not_interested" },
+  { key: "other_clinic", label: "Se atiende en otra clínica", color: "error", group: "not_interested" },
+  { key: "moved_away", label: "Se mudó / no vive en la zona", color: "default", group: "not_interested" },
+  { key: "do_not_call", label: "No desea ser contactado", color: "error", group: "not_interested" },
+  { key: "deceased", label: "Paciente fallecido", color: "default", group: "not_interested" },
+  // Otros
+  { key: "other", label: "Otro", color: "default", group: "other", needsNotes: true },
 ];
+
+/** Outcomes split into their dialog sections, in display order. */
+export function outcomesByGroup() {
+  return CALL_OUTCOME_GROUPS.map((g) => ({ ...g, outcomes: CALL_OUTCOMES.filter((o) => o.group === g.key) }));
+}
 
 /** Denormalized "last call" columns kept on clients by the call_logs trigger. */
 export type CallSummary = {
@@ -31,15 +86,18 @@ export type CallSummary = {
   next_call_on: string | null;
 };
 
+/** `outcome` is optional ("" = none), but a call needs an outcome or a note. */
 export type CallInput = { outcome: string; notes: string; followUpOn: string };
 
 const TIME_ZONE = "America/Lima";
 
-export function outcomeOption(key: string) {
-  return CALL_OUTCOMES.find((o) => o.key === key);
+export function outcomeOption(key: string | null | undefined) {
+  return key ? CALL_OUTCOMES.find((o) => o.key === key) : undefined;
 }
 
-export function outcomeLabel(key: string) {
+/** Label of an outcome; a call logged with only a note reads "Nota". */
+export function outcomeLabel(key: string | null | undefined) {
+  if (!key) return "Nota";
   return outcomeOption(key)?.label ?? key;
 }
 
@@ -65,10 +123,11 @@ export function addDays(day: string, n: number) {
 /** Error message for an invalid call, or null. `today` is the Lima calendar day (YYYY-MM-DD). */
 export function validateCall({ outcome, notes, followUpOn }: CallInput, today: string = limaToday()) {
   const option = outcomeOption(outcome);
-  if (!option) return "Elige el resultado de la llamada.";
-  if (option.needsNotes && !notes.trim()) return "Escribe una nota que describa la llamada.";
+  if (outcome && !option) return "El resultado elegido no es válido.";
+  if (!option && !notes.trim()) return "Elige un resultado o escribe una nota.";
+  if (option?.needsNotes && !notes.trim()) return "Escribe una nota que describa la llamada.";
   const date = followUpOn.trim();
-  if (option.needsDate && !date) return "Elige la fecha para volver a llamar.";
+  if (option?.needsDate && !date) return "Elige la fecha para volver a llamar.";
   if (date) {
     if (!isValidDay(date)) return "La fecha no es válida.";
     if (date < today) return "La fecha no puede estar en el pasado.";
