@@ -143,6 +143,7 @@ function CallForm({ clientId, mobile, whatsapp, onLogged, onClose }: FormProps) 
                           label={o.label}
                           color={o.color}
                           variant={selected ? "filled" : "outlined"}
+                          icon={selected ? <CheckIcon /> : undefined}
                           // Tapping the selected outcome again clears it (the outcome is optional).
                           onClick={() => setOutcome(selected ? "" : o.key)}
                           role="radio"
