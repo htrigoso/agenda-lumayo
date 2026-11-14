@@ -16,6 +16,8 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import CallIcon from "@mui/icons-material/Call";
+import CheckIcon from "@mui/icons-material/Check";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalkOutlined";
 import { logCall } from "@/app/(app)/clients/actions";
 import { type CallSummary, addDays, formatDay, limaToday, outcomeLabel, outcomeOption, outcomesByGroup, validateCall } from "@/lib/calls";
@@ -33,6 +35,37 @@ type Props = {
 };
 
 type FormProps = Omit<Props, "variant" | "name"> & { onClose: () => void };
+
+/** Patient number with a copy button (no tel: link: staff dial from their own phone). */
+function PhoneCopy({ phone }: { phone: string }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(phone.replace(/[^\d+]/g, ""));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  return (
+    <Stack
+      direction="row"
+      spacing={1.5}
+      sx={{ alignItems: "center", px: 2, py: 1.25, borderRadius: 2, bgcolor: "success.main", color: "success.contrastText" }}
+    >
+      <CallIcon />
+      <Typography sx={{ flexGrow: 1, fontWeight: 700, fontSize: "1.1rem", letterSpacing: 0.5 }}>{phone}</Typography>
+      <Tooltip title={copied ? "¡Copiado!" : "Copiar número"}>
+        <IconButton onClick={copy} aria-label="Copiar número" sx={{ color: "inherit" }}>
+          {copied ? <CheckIcon /> : <ContentCopyIcon />}
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  );
+}
 
 /** Mounted only while the dialog is open, so each call starts with a clean form. */
 function CallForm({ clientId, mobile, whatsapp, onLogged, onClose }: FormProps) {
@@ -86,9 +119,7 @@ function CallForm({ clientId, mobile, whatsapp, onLogged, onClose }: FormProps) 
       <DialogContent sx={{ pt: 0 }}>
         <Stack spacing={2.5}>
           {phone ? (
-            <Button href={`tel:${phone.replace(/[^\d+]/g, "")}`} variant="contained" color="success" size="large" startIcon={<CallIcon />}>
-              Llamar {phone}
-            </Button>
+            <PhoneCopy phone={phone} />
           ) : (
             <Alert severity="info">Este paciente no tiene celular ni WhatsApp registrado.</Alert>
           )}
