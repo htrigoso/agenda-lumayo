@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildVCard, toE164, vcardFileName } from "./vcard.ts";
+import { buildVCard, contactPhone, toE164, vcardFileName } from "./vcard.ts";
 
 const base = { first_name: "Juan Carlos", last_name: "Pérez Ríos", mobile: "987654321", email: null };
 
@@ -50,4 +50,21 @@ test("toE164 normalizes common Peruvian formats", () => {
 test("vcardFileName is ASCII-safe", () => {
   assert.equal(vcardFileName(base), "Juan-Carlos-Perez-Rios.vcf");
   assert.equal(vcardFileName({ ...base, first_name: "", last_name: "" }), "contacto.vcf");
+});
+
+test("uses WhatsApp as the phone when there is no mobile", () => {
+  const card = buildVCard({ ...base, mobile: null, whatsapp: "912345678" });
+  assert.match(card, /TEL;TYPE=CELL:\+51912345678\r\n/);
+});
+
+test("prefers the mobile over WhatsApp when both exist", () => {
+  const card = buildVCard({ ...base, whatsapp: "912345678" });
+  assert.match(card, /TEL;TYPE=CELL:\+51987654321\r\n/);
+  assert.doesNotMatch(card, /912345678/);
+});
+
+test("contactPhone falls back to WhatsApp", () => {
+  assert.equal(contactPhone({ mobile: null, whatsapp: "912345678" }), "912345678");
+  assert.equal(contactPhone({ mobile: "987654321", whatsapp: "912345678" }), "987654321");
+  assert.equal(contactPhone({ mobile: null, whatsapp: null }), null);
 });

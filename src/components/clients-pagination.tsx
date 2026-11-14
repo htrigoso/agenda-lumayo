@@ -12,12 +12,18 @@ export function ClientsPagination({
   from,
   to,
   total,
+  pending = false,
+  onNavigate,
 }: {
   page: number;
   pageCount: number;
   from: number;
   to: number;
   total: number;
+  /** True while the next page is loading: the control is disabled to avoid double clicks. */
+  pending?: boolean;
+  /** Wraps the navigation (e.g. in startTransition) so the parent can show a loading state. */
+  onNavigate?: (navigate: () => void) => void;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,8 +35,10 @@ export function ClientsPagination({
     if (next > 1) params.set("page", String(next));
     else params.delete("page");
     const qs = params.toString();
-    router.push(qs ? `/?${qs}` : "/");
-    window.scrollTo({ top: 0 });
+    const navigate = () => router.push(qs ? `/?${qs}` : "/");
+    if (onNavigate) onNavigate(navigate);
+    else navigate();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
@@ -46,6 +54,7 @@ export function ClientsPagination({
           page={page}
           count={pageCount}
           color="primary"
+          disabled={pending}
           onChange={(_, next) => goTo(next)}
           renderItem={(item) => (
             <PaginationItem

@@ -19,6 +19,8 @@ import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
 import { formatRecordNumber } from "@/lib/record";
 import { PriorityChip } from "@/components/priority-chip";
+import { NewChip } from "@/components/new-chip";
+import { NEW_TAG } from "@/lib/clients-query";
 import { SaveContactButton } from "@/components/save-contact-button";
 
 export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emptyMessage: string }) {
@@ -30,8 +32,6 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
             <TableCell>Paciente</TableCell>
             <TableCell>Celular</TableCell>
             <TableCell>WhatsApp</TableCell>
-            <TableCell>Correo</TableCell>
-            <TableCell>Descripción</TableCell>
             <TableCell align="center">Contacto</TableCell>
             <TableCell align="right">Acciones</TableCell>
           </TableRow>
@@ -39,7 +39,7 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
         <MotionTableBody variants={containerVariants} initial="hidden" animate="show">
           {clients.length === 0 && (
             <TableRow>
-              <TableCell colSpan={7} align="center" sx={{ py: 6, color: "text.secondary" }}>
+              <TableCell colSpan={5} align="center" sx={{ py: 6, color: "text.secondary" }}>
                 {emptyMessage}
               </TableCell>
             </TableRow>
@@ -60,6 +60,7 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
                     )}
                   </Box>
                   {c.is_priority && <PriorityChip />}
+                  {c.tags?.includes(NEW_TAG) && <NewChip />}
                 </Stack>
               </TableCell>
               <TableCell>{c.mobile ?? "—"}</TableCell>
@@ -72,12 +73,8 @@ export function ClientsTable({ clients, emptyMessage }: { clients: Client[]; emp
                   "—"
                 )}
               </TableCell>
-              <TableCell>{c.email ?? "—"}</TableCell>
-              <TableCell sx={{ maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {c.description ?? "—"}
-              </TableCell>
               <TableCell align="center">
-                <SaveContactButton id={c.id} mobile={c.mobile} />
+                <SaveContactButton id={c.id} mobile={c.mobile} whatsapp={c.whatsapp} />
               </TableCell>
               <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
                 <IconButton href={`/clients/${c.id}`} aria-label="Editar" title="Editar">

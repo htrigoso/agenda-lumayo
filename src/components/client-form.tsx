@@ -12,6 +12,7 @@ import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { saveClient } from "@/app/(app)/clients/actions";
+import { NEW_TAG } from "@/lib/clients-query";
 
 export type Client = {
   id: string;
@@ -22,6 +23,7 @@ export type Client = {
   email: string | null;
   description: string | null;
   is_priority: boolean;
+  tags: string[];
   record_number?: number;
   dni?: string | null;
   birth_date?: string | null;
@@ -150,6 +152,12 @@ export function ClientForm({ client }: { client?: Client }) {
             <FormControlLabel
               control={<Switch name="is_priority" defaultChecked={client?.is_priority ?? false} color="warning" />}
               label="Paciente potencial (prioridad alta)"
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: "flex", alignItems: "center" }}>
+            <FormControlLabel
+              control={<Switch name="is_new" defaultChecked={client?.tags?.includes(NEW_TAG) ?? false} color="info" />}
+              label="Paciente nuevo"
             />
           </Grid>
           <Grid size={12}>

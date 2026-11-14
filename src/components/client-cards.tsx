@@ -21,6 +21,8 @@ import { DeleteClientButton } from "@/components/delete-client-button";
 import { whatsappUrl } from "@/lib/phone";
 import { formatRecordNumber } from "@/lib/record";
 import { PriorityChip } from "@/components/priority-chip";
+import { NewChip } from "@/components/new-chip";
+import { NEW_TAG } from "@/lib/clients-query";
 import { SaveContactButton } from "@/components/save-contact-button";
 
 type Props = {
@@ -31,9 +33,10 @@ type Props = {
   page: number;
   term: string;
   onlyPriority: boolean;
+  onlyNew: boolean;
 };
 
-export function ClientCards({ initial, total, page, term, onlyPriority }: Props) {
+export function ClientCards({ initial, total, page, term, onlyPriority, onlyNew }: Props) {
   const [items, setItems] = useState(initial);
   const [lastPage, setLastPage] = useState(page);
   const [removed, setRemoved] = useState(0);
@@ -43,7 +46,7 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
 
   function loadMore() {
     startTransition(async () => {
-      const next = await loadMoreClients(lastPage + 1, term, onlyPriority);
+      const next = await loadMoreClients(lastPage + 1, term, onlyPriority, onlyNew);
       setItems((prev) => [...prev, ...next.filter((n) => !prev.some((p) => p.id === n.id))]);
       setLastPage((p) => p + 1);
     });
@@ -52,7 +55,7 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
   if (items.length === 0) {
     return (
       <Paper sx={{ p: 4, textAlign: "center", color: "text.secondary" }}>
-        {term || onlyPriority ? "Ningún paciente coincide con tu búsqueda." : "Aún no hay pacientes. ¡Agrega el primero!"}
+        {term || onlyPriority || onlyNew ? "Ningún paciente coincide con tu búsqueda." : "Aún no hay pacientes. ¡Agrega el primero!"}
       </Paper>
     );
   }
@@ -74,7 +77,7 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
                 </Typography>
               )}
             </Box>
-            <SaveContactButton id={c.id} mobile={c.mobile} />
+            <SaveContactButton id={c.id} mobile={c.mobile} whatsapp={c.whatsapp} />
             <IconButton href={`/clients/${c.id}`} aria-label="Editar">
               <EditIcon />
             </IconButton>
@@ -119,9 +122,10 @@ export function ClientCards({ initial, total, page, term, onlyPriority }: Props)
               </Typography>
             )}
           </Stack>
-          {c.is_priority && (
-            <Stack direction="row" sx={{ justifyContent: "flex-end", mt: 1.5 }}>
-              <PriorityChip />
+          {(c.is_priority || c.tags?.includes(NEW_TAG)) && (
+            <Stack direction="row" spacing={1} sx={{ justifyContent: "flex-end", mt: 1.5 }}>
+              {c.tags?.includes(NEW_TAG) && <NewChip />}
+              {c.is_priority && <PriorityChip />}
             </Stack>
           )}
         </LiftCard>

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { Client } from "@/components/client-form";
-import { fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
+import { NEW_TAG, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
 import { createClient } from "@/lib/supabase/server";
 
 function parse(formData: FormData) {
@@ -26,12 +26,28 @@ function parse(formData: FormData) {
   };
 }
 
+/** Adds or removes NEW_TAG while preserving any other tags. */
+function withNewTag(tags: string[], isNew: boolean) {
+  const rest = tags.filter((t) => t !== NEW_TAG);
+  return isNew ? [...rest, NEW_TAG] : rest;
+}
+
 export async function saveClient(id: string | null, formData: FormData) {
   const supabase = await createClient();
   const values = parse(formData);
-  const { error } = id
-    ? await supabase.from("clients").update({ ...values, updated_at: new Date().toISOString() }).eq("id", id)
-    : await supabase.from("clients").insert(values);
+  const isNew = formData.get("is_new") === "on";
+  let error;
+  if (id) {
+    const current = await supabase.from("clients").select("tags").eq("id", id).single();
+    if (current.error) throw new Error(current.error.message);
+    const tags = withNewTag((current.data.tags as string[] | null) ?? [], isNew);
+    ({ error } = await supabase
+      .from("clients")
+      .update({ ...values, tags, updated_at: new Date().toISOString() })
+      .eq("id", id));
+  } else {
+    ({ error } = await supabase.from("clients").insert({ ...values, tags: isNew ? [NEW_TAG] : [] }));
+  }
   if (error) throw new Error(error.message);
   revalidatePath("/");
   redirect("/");
@@ -46,12 +62,13 @@ export async function deleteClient(id: string) {
   revalidatePath("/");
 }
 
-export async function loadMoreClients(page: number, q: string, onlyPriority: boolean) {
+export async function loadMoreClients(page: number, q: string, onlyPriority: boolean, onlyNew: boolean) {
   const supabase = await createClient();
   const { data, error } = await fetchClientsPage(supabase, {
     page,
     term: sanitizeTerm(q),
     onlyPriority,
+    onlyNew,
   });
   if (error) throw new Error(error.message);
   return (data ?? []) as Client[];

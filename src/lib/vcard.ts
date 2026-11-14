@@ -3,8 +3,14 @@ export type VCardContact = {
   first_name: string;
   last_name: string;
   mobile: string | null;
+  whatsapp?: string | null;
   email: string | null;
 };
+
+/** The number saved on the phone: the mobile, or the WhatsApp number when there is no mobile. */
+export function contactPhone(c: { mobile: string | null; whatsapp?: string | null }) {
+  return c.mobile?.trim() || c.whatsapp?.trim() || null;
+}
 
 /** Peruvian mobiles (9 digits starting with 9) get +51; anything else is returned untouched. */
 export function toE164(phone: string) {
@@ -21,7 +27,8 @@ function escape(value: string) {
 export function buildVCard(c: VCardContact) {
   const first = c.first_name.trim();
   const last = c.last_name.trim();
-  const fullName = [first, last].filter(Boolean).join(" ") || c.mobile?.trim() || "Paciente";
+  const phone = contactPhone(c);
+  const fullName = [first, last].filter(Boolean).join(" ") || phone || "Paciente";
 
   const lines = [
     "BEGIN:VCARD",
@@ -29,7 +36,7 @@ export function buildVCard(c: VCardContact) {
     `N:${escape(last)};${escape(first)};;;`,
     `FN:${escape(fullName)}`,
   ];
-  if (c.mobile) lines.push(`TEL;TYPE=CELL:${toE164(c.mobile)}`);
+  if (phone) lines.push(`TEL;TYPE=CELL:${toE164(phone)}`);
   if (c.email) lines.push(`EMAIL;TYPE=INTERNET:${escape(c.email.trim())}`);
   lines.push("END:VCARD");
   return lines.join("\r\n") + "\r\n";

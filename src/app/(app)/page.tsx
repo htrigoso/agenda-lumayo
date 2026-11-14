@@ -17,10 +17,11 @@ import { PAGE_SIZE, fetchClientsPage, sanitizeTerm } from "@/lib/clients-query";
 import { createClient } from "@/lib/supabase/server";
 import { connection } from "next/server";
 
-function pageHref(page: number, term: string, onlyPriority: boolean) {
+function pageHref(page: number, term: string, onlyPriority: boolean, onlyNew: boolean) {
   const params = new URLSearchParams();
   if (term) params.set("q", term);
   if (onlyPriority) params.set("potential", "1");
+  if (onlyNew) params.set("new", "1");
   if (page > 1) params.set("page", String(page));
   const qs = params.toString();
   return qs ? `/?${qs}` : "/";
@@ -29,8 +30,9 @@ function pageHref(page: number, term: string, onlyPriority: boolean) {
 async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
   // Per-request, per-user data: render at request time, never prerender it.
   await connection();
-  const { q, potential, page: pageParam } = await searchParams;
+  const { q, potential, new: newParam, page: pageParam } = await searchParams;
   const onlyPriority = potential === "1";
+  const onlyNew = newParam === "1";
   const term = sanitizeTerm(q);
 
   const rawPage = typeof pageParam === "string" ? Number.parseInt(pageParam, 10) : 1;
@@ -39,7 +41,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
   const supabase = await createClient();
   const head = { count: "exact", head: true } as const;
   const [list, totalRes, whatsappRes, emailRes] = await Promise.all([
-    fetchClientsPage(supabase, { page: requestedPage, term, onlyPriority }),
+    fetchClientsPage(supabase, { page: requestedPage, term, onlyPriority, onlyNew }),
     supabase.from("clients").select("id", head),
     supabase.from("clients").select("id", head).not("whatsapp", "is", null),
     supabase.from("clients").select("id", head).not("email", "is", null),
@@ -49,7 +51,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
   const matches = list.count ?? 0;
   const pageCount = Math.max(1, Math.ceil(matches / PAGE_SIZE));
   // Out-of-range pages (e.g. after deleting the last item of a page) show the last page.
-  if (requestedPage > pageCount && matches > 0) redirect(pageHref(pageCount, term, onlyPriority));
+  if (requestedPage > pageCount && matches > 0) redirect(pageHref(pageCount, term, onlyPriority, onlyNew));
   const page = requestedPage;
   const from = matches === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const to = Math.min(page * PAGE_SIZE, matches);
@@ -73,7 +75,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
       </Grid>
 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <SearchBox initial={term} onlyPriority={onlyPriority} />
+        <SearchBox initial={term} onlyPriority={onlyPriority} onlyNew={onlyNew} />
         <Button href="/clients/new" variant="contained" startIcon={<AddIcon />}>
           Nuevo paciente
         </Button>
@@ -88,6 +90,7 @@ async function Dashboard({ searchParams }: Pick<PageProps<"/">, "searchParams">)
         to={to}
         term={term}
         onlyPriority={onlyPriority}
+        onlyNew={onlyNew}
       />
     </Stack>
   );
